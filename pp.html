@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaibhav's Photography</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 18px;
+            letter-spacing: 3px;
+            font-weight: 300;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 100px 50px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 60px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h3 {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .gallery-overlay p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 40px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 50px;
+            background: #0a0a0a;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 40px;
+        }
+
+        .about-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 50px;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact input,
+        .contact textarea {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 15px;
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .contact textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .contact button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .contact button:hover {
+            background: #ddd;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 50px;
+            text-align: center;
+            background: #0a0a0a;
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+                letter-spacing: 4px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .gallery {
+                padding: 60px 20px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .about, .contact {
+                padding: 60px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">VAIBHAV VERMA</div>
+        <ul>
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#gallery">GALLERY</a></li>
+            <li><a href="#about">ABOUT</a></li>
+            <li><a href="#contact">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=1600" alt="Hero" class="hero-bg">
+        <div class="hero-content">
+            <h1>BEYOND THE FRAME</h1>
+            <p>CAPTURING MOMENTS THAT MATTER</p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+<section id="gallery" class="gallery">
+    <h2 class="section-title">PORTFOLIO</h2>
+    <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/VV.jpeg" alt="VV">
+            <div class="gallery-overlay">
+                <h3>VV</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/win.jpeg" alt="Win">
+            <div class="gallery-overlay">
+                <h3>Win</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/4thF.jpeg" alt="4thF">
+            <div class="gallery-overlay">
+                <h3>4th Floor</h3>
+                <p>Architecture</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/517.jpeg" alt="517">
+            <div class="gallery-overlay">
+                <h3>Unit 517</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/audi.jpeg" alt="Audi">
+            <div class="gallery-overlay">
+                <h3>Audi</h3>
+                <p>Photography
+                </p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/Axis.jpg" alt="Axis">
+            <div class="gallery-overlay">
+                <h3>Axis Block</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/Bangle.jpeg" alt="Bangle">
+            <div class="gallery-overlay">
+                <h3>Bangle</h3>
+                <p>Sunset Within Frame</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/bharti.jpeg" alt="Bharti">
+            <div class="gallery-overlay">
+                <h3>Bharti Block</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/Ble.jpeg" alt="Ble">
+            <div class="gallery-overlay">
+                <h3>Bottle</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/car.jpg" alt="Car">
+            <div class="gallery-overlay">
+                <h3>Car</h3>
+                <p>Automotive</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/GrandSC.jpg" alt="GrandSC">
+            <div class="gallery-overlay">
+                <h3>Grand SC</h3>
+                <p>Landscape</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/Ground.jpg" alt="Ground">
+            <div class="gallery-overlay">
+                <h3>Ground</h3>
+                <p>Outdoor</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/isb.jpg" alt="ISB">
+            <div class="gallery-overlay">
+                <h3>ISB</h3>
+                <p>Traffic and Sunset
+                </p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/me.jpeg" alt="Me">
+            <div class="gallery-overlay">
+                <h3>Portrait</h3>
+                <p>Me</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/point.jpeg" alt="Point">
+            <div class="gallery-overlay">
+                <h3>Point</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/PR.jpeg" alt="PR">
+            <div class="gallery-overlay">
+                <h3>PR</h3>
+                <p>Silhoutte</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/PR2.jpeg" alt="PR2">
+            <div class="gallery-overlay">
+                <h3>PR 2</h3>
+                <p>Silhoutte</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/RD.jpg" alt="RD">
+            <div class="gallery-overlay">
+                <h3>RD</h3>
+                <p>Portrait
+                </p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/Specs.jpeg" alt="Specs">
+            <div class="gallery-overlay">
+                <h3>Sunset Within Frame</h3>
+                <p>Product</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/Sukhna.jpeg" alt="Sukhna">
+            <div class="gallery-overlay">
+                <h3>Traffic and Sunset</h3>
+                <p>Landscape</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/SWC.jpg" alt="SWC">
+            <div class="gallery-overlay">
+                <h3>SWC</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox(this)">
+            <img src="images/swc2.jpeg" alt="SWC2">
+            <div class="gallery-overlay">
+                <h3>SWC 2</h3>
+                <p>Photography</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h2 class="section-title">ABOUT ME</h2>
+        <div class="about-content">
+            <img src="images/profile_VV.jpg" alt="Profile">
+            <p>
+                Nature creates. I simply notice and try to hold on to the beauty it
+                leaves behind. I'm still learning,still wandering, and always in awe.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">GET IN TOUCH</h2>
+        <div class="contact-content">
+            <form onsubmit="handleSubmit(event)">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit">SEND MESSAGE</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Vaibhav's Photography. All rights reserved.</p>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <img src="" alt="Lightbox Image">
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Lightbox functionality
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const lightbox = document.querySelector('.lightbox');
+            const lightboxImg = lightbox.querySelector('img');
+            lightboxImg.src = img.src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.querySelector('.lightbox').classList.remove('active');
+        }
+
+        // Contact form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('Thank you for your message! I will get back to you soon.');
+            e.target.reset();
+        }
+
+        // Escape key to close lightbox
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
