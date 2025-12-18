@@ -889,9 +889,14 @@
             loadingScreen.classList.add('hidden');
         } else {
             // Show loading animation on first visit
-            window.addEventListener('load', () => {
-                const progress = document.querySelector('.loading-progress');
-                let width = 0;
+            const progress = document.querySelector('.loading-progress');
+            let width = 0;
+            let loadingComplete = false;
+            
+            const finishLoading = () => {
+                if (loadingComplete) return;
+                loadingComplete = true;
+                
                 const interval = setInterval(() => {
                     width += 20;
                     progress.style.width = width + '%';
@@ -903,7 +908,13 @@
                         }, 300);
                     }
                 }, 50);
-            });
+            };
+            
+            // Start loading on window load
+            window.addEventListener('load', finishLoading);
+            
+            // Failsafe: Force finish after 3 seconds max
+            setTimeout(finishLoading, 3000);
         }
 
         // Custom Cursor
