@@ -18,6 +18,7 @@
             --text-secondary: #999;
             --accent: #fff;
             --overlay: rgba(0,0,0,0.8);
+            --border: #333;
         }
 
         [data-theme="light"] {
@@ -27,33 +28,7 @@
             --text-secondary: #666;
             --accent: #000;
             --overlay: rgba(255,255,255,0.9);
-        }
-
-        [data-theme="blue"] {
-            --bg-primary: #0a1628;
-            --bg-secondary: #132847;
-            --text-primary: #e0f2fe;
-            --text-secondary: #7dd3fc;
-            --accent: #38bdf8;
-            --overlay: rgba(10,22,40,0.9);
-        }
-
-        [data-theme="purple"] {
-            --bg-primary: #1a0a2e;
-            --bg-secondary: #2d1b4e;
-            --text-primary: #f3e8ff;
-            --text-secondary: #d8b4fe;
-            --accent: #a78bfa;
-            --overlay: rgba(26,10,46,0.9);
-        }
-
-        [data-theme="green"] {
-            --bg-primary: #0a1f0a;
-            --bg-secondary: #1a3a1a;
-            --text-primary: #dcfce7;
-            --text-secondary: #86efac;
-            --accent: #4ade80;
-            --overlay: rgba(10,31,10,0.9);
+            --border: #ddd;
         }
 
         body {
@@ -69,34 +44,34 @@
         .cursor {
             width: 20px;
             height: 20px;
-            border: 2px solid var(--accent);
+            border: 2px solid var(--text-primary);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9999;
-            transition: transform 0.2s ease, border-color 0.3s;
+            transition: transform 0.2s ease, border-color 0.3s ease;
             mix-blend-mode: difference;
         }
 
         .cursor-follower {
             width: 40px;
             height: 40px;
-            border: 1px solid var(--accent);
+            border: 1px solid var(--text-primary);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
             z-index: 9998;
-            transition: transform 0.4s ease;
+            transition: transform 0.4s ease, border-color 0.3s ease;
             opacity: 0.5;
             mix-blend-mode: difference;
         }
 
-        .cursor.active {
+        .cursor.hover {
             transform: scale(1.5);
         }
 
         /* Loading Screen */
-        .loader {
+        .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -107,41 +82,44 @@
             align-items: center;
             justify-content: center;
             z-index: 10000;
-            transition: opacity 0.5s, visibility 0.5s;
+            transition: opacity 0.5s ease;
         }
 
-        .loader.hidden {
+        .loading-screen.hidden {
             opacity: 0;
-            visibility: hidden;
+            pointer-events: none;
         }
 
-        .loader-content {
+        .loading-content {
             text-align: center;
         }
 
-        .loader-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--text-secondary);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+        .loading-text {
+            font-size: 32px;
+            letter-spacing: 8px;
+            font-weight: 300;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .loading-bar {
+            width: 200px;
+            height: 2px;
+            background: var(--border);
+            margin: 30px auto 0;
+            position: relative;
+            overflow: hidden;
         }
 
-        .loader-text {
-            font-size: 18px;
-            letter-spacing: 4px;
-            animation: pulse 1.5s ease-in-out infinite;
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: var(--text-primary);
+            transition: width 0.3s ease;
         }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.3; }
         }
 
         /* Navigation */
@@ -155,8 +133,12 @@
             align-items: center;
             z-index: 1000;
             background: linear-gradient(180deg, var(--overlay) 0%, transparent 100%);
+            transition: background 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: var(--overlay);
             backdrop-filter: blur(10px);
-            transition: background 0.3s;
         }
 
         .logo {
@@ -165,11 +147,16 @@
             letter-spacing: 2px;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
         nav ul {
             display: flex;
             list-style: none;
             gap: 30px;
-            align-items: center;
         }
 
         nav a {
@@ -177,7 +164,7 @@
             text-decoration: none;
             font-size: 14px;
             letter-spacing: 1px;
-            transition: opacity 0.3s, color 0.3s;
+            transition: opacity 0.3s;
             position: relative;
         }
 
@@ -187,78 +174,40 @@
             bottom: -5px;
             left: 0;
             width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.3s;
+            height: 1px;
+            background: var(--text-primary);
+            transition: width 0.3s ease;
         }
 
         nav a:hover::after {
             width: 100%;
         }
 
-        /* Theme Controls */
-        .controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .theme-toggle, .color-picker {
-            background: var(--bg-secondary);
-            border: 1px solid var(--text-secondary);
-            color: var(--text-primary);
-            padding: 8px 15px;
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 50px;
+            height: 26px;
+            background: var(--border);
             border-radius: 20px;
+            position: relative;
             cursor: pointer;
-            font-size: 12px;
-            letter-spacing: 1px;
-            transition: all 0.3s;
+            transition: background 0.3s ease;
         }
 
-        .theme-toggle:hover, .color-picker:hover {
-            background: var(--accent);
-            color: var(--bg-primary);
-            transform: translateY(-2px);
-        }
-
-        .color-options {
-            position: absolute;
-            top: 60px;
-            right: 50px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--text-secondary);
-            border-radius: 10px;
-            padding: 15px;
-            display: none;
-            gap: 10px;
-            box-shadow: 0 10px 30px var(--overlay);
-        }
-
-        .color-options.active {
-            display: flex;
-        }
-
-        .color-option {
-            width: 30px;
-            height: 30px;
+        .theme-toggle-slider {
+            width: 20px;
+            height: 20px;
+            background: var(--text-primary);
             border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.3s;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.3s ease;
         }
 
-        .color-option:hover {
-            transform: scale(1.2);
+        [data-theme="light"] .theme-toggle-slider {
+            transform: translateX(24px);
         }
-
-        .color-option.active {
-            border-color: var(--accent);
-        }
-
-        .color-dark { background: #000; }
-        .color-blue { background: #0a1628; }
-        .color-purple { background: #1a0a2e; }
-        .color-green { background: #0a1f0a; }
 
         /* Hero Section */
         .hero {
@@ -273,15 +222,16 @@
         .hero-bg {
             position: absolute;
             width: 100%;
-            height: 120%;
+            height: 100%;
             object-fit: cover;
-            filter: brightness(0.6);
-            transform: scale(1.1);
-            transition: transform 8s ease-out;
+            filter: brightness(0.5);
+            transform: scale(1);
+            animation: zoomIn 20s ease-in-out infinite alternate;
         }
 
-        .hero:hover .hero-bg {
-            transform: scale(1);
+        @keyframes zoomIn {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
         }
 
         .hero-content {
@@ -295,16 +245,14 @@
             font-weight: 300;
             letter-spacing: 8px;
             margin-bottom: 20px;
-            opacity: 0;
-            animation: fadeInUp 1s ease 0.5s forwards;
+            animation: fadeInUp 1s ease;
         }
 
         .hero p {
             font-size: 18px;
             letter-spacing: 3px;
             font-weight: 300;
-            opacity: 0;
-            animation: fadeInUp 1s ease 0.8s forwards;
+            animation: fadeInUp 1s ease 0.3s both;
         }
 
         @keyframes fadeInUp {
@@ -318,10 +266,29 @@
             }
         }
 
+        /* Parallax Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator::before {
+            content: '↓';
+            font-size: 24px;
+            color: var(--text-primary);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
         /* Gallery Section */
         .gallery {
             padding: 100px 50px;
-            min-height: 100vh;
         }
 
         .section-title {
@@ -330,44 +297,33 @@
             font-weight: 300;
             letter-spacing: 4px;
             margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s, transform 0.8s;
         }
 
-        .section-title.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Category Filters */
-        .filters {
+        /* Filter Buttons */
+        .filter-buttons {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             margin-bottom: 60px;
             flex-wrap: wrap;
         }
 
         .filter-btn {
             background: transparent;
-            border: 1px solid var(--text-secondary);
+            border: 1px solid var(--border);
             color: var(--text-primary);
             padding: 10px 25px;
-            border-radius: 25px;
-            cursor: pointer;
             font-size: 14px;
             letter-spacing: 1px;
-            transition: all 0.3s;
-            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--accent);
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--text-primary);
             color: var(--bg-primary);
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px var(--overlay);
+            border-color: var(--text-primary);
         }
 
         .gallery-grid {
@@ -383,32 +339,39 @@
             overflow: hidden;
             aspect-ratio: 4/3;
             cursor: pointer;
-            border-radius: 10px;
             opacity: 0;
-            transform: scale(0.9);
-            transition: opacity 0.5s, transform 0.5s;
+            transform: translateY(30px);
+            animation: fadeInUpItem 0.6s ease forwards;
         }
 
-        .gallery-item.visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .gallery-item.hide {
+        .gallery-item.hidden {
             display: none;
         }
+
+        @keyframes fadeInUpItem {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gallery-item:nth-child(1) { animation-delay: 0.1s; }
+        .gallery-item:nth-child(2) { animation-delay: 0.2s; }
+        .gallery-item:nth-child(3) { animation-delay: 0.3s; }
+        .gallery-item:nth-child(4) { animation-delay: 0.4s; }
+        .gallery-item:nth-child(5) { animation-delay: 0.5s; }
+        .gallery-item:nth-child(6) { animation-delay: 0.6s; }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease, filter 0.3s;
-            filter: grayscale(0.3);
+            transition: transform 0.6s ease, filter 0.3s ease;
         }
 
         .gallery-item:hover img {
             transform: scale(1.15) rotate(2deg);
-            filter: grayscale(0);
+            filter: brightness(1.1);
         }
 
         .gallery-overlay {
@@ -419,7 +382,7 @@
             background: linear-gradient(transparent, var(--overlay));
             padding: 30px;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: transform 0.4s ease;
         }
 
         .gallery-item:hover .gallery-overlay {
@@ -430,24 +393,11 @@
             font-size: 20px;
             font-weight: 400;
             margin-bottom: 5px;
-            color: var(--text-primary);
         }
 
         .gallery-overlay p {
             font-size: 14px;
             opacity: 0.8;
-            color: var(--text-primary);
-        }
-
-        .category-tag {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--bg-primary);
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            margin-top: 8px;
-            letter-spacing: 1px;
         }
 
         /* Lightbox */
@@ -458,11 +408,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.97);
+            background: rgba(0,0,0,0.95);
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
             animation: fadeIn 0.3s ease;
         }
 
@@ -479,10 +428,10 @@
             max-width: 90%;
             max-height: 90%;
             position: relative;
-            animation: zoomIn 0.4s ease;
+            animation: scaleIn 0.4s ease;
         }
 
-        @keyframes zoomIn {
+        @keyframes scaleIn {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
@@ -491,8 +440,6 @@
             max-width: 100%;
             max-height: 90vh;
             object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
 
         .lightbox-close {
@@ -503,18 +450,17 @@
             color: #fff;
             cursor: pointer;
             z-index: 2001;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
         }
 
         .lightbox-close:hover {
-            transform: rotate(90deg) scale(1.2);
+            transform: rotate(90deg);
         }
 
         /* About Section */
         .about {
             padding: 100px 50px;
             background: var(--bg-secondary);
-            transition: background 0.5s;
         }
 
         .about-content {
@@ -529,8 +475,8 @@
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 40px;
-            border: 4px solid var(--accent);
-            transition: transform 0.3s, border-color 0.3s;
+            border: 3px solid var(--text-primary);
+            transition: transform 0.3s ease;
         }
 
         .about-content img:hover {
@@ -542,7 +488,6 @@
             line-height: 1.8;
             font-weight: 300;
             margin-bottom: 20px;
-            color: var(--text-primary);
         }
 
         /* Contact Section */
@@ -564,20 +509,18 @@
         .contact input,
         .contact textarea {
             background: var(--bg-secondary);
-            border: 1px solid var(--text-secondary);
+            border: 1px solid var(--border);
             padding: 15px;
             color: var(--text-primary);
             font-size: 16px;
             font-family: inherit;
-            border-radius: 8px;
-            transition: all 0.3s;
+            transition: border-color 0.3s ease;
         }
 
         .contact input:focus,
         .contact textarea:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+            border-color: var(--text-primary);
         }
 
         .contact textarea {
@@ -586,21 +529,39 @@
         }
 
         .contact button {
-            background: var(--accent);
+            background: var(--text-primary);
             color: var(--bg-primary);
             border: none;
             padding: 15px 40px;
             font-size: 16px;
             letter-spacing: 2px;
             cursor: pointer;
-            border-radius: 30px;
-            transition: all 0.3s;
-            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .contact button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px var(--overlay);
+        .contact button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--bg-secondary);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .contact button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .contact button span {
+            position: relative;
+            z-index: 1;
         }
 
         /* Footer */
@@ -610,7 +571,6 @@
             background: var(--bg-secondary);
             font-size: 14px;
             opacity: 0.6;
-            transition: background 0.5s;
         }
 
         /* Mobile Responsive */
@@ -619,29 +579,17 @@
                 cursor: auto;
             }
 
-            .cursor, .cursor-follower {
+            .cursor,
+            .cursor-follower {
                 display: none;
             }
 
             nav {
                 padding: 20px;
-                flex-direction: column;
-                gap: 15px;
             }
 
             nav ul {
                 gap: 15px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .controls {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .color-options {
-                right: 20px;
             }
 
             .hero h1 {
@@ -665,22 +613,29 @@
                 font-size: 32px;
             }
 
-            .filters {
-                padding: 0 10px;
-            }
-
             .about, .contact {
                 padding: 60px 20px;
+            }
+
+            .filter-buttons {
+                gap: 10px;
+            }
+
+            .filter-btn {
+                padding: 8px 15px;
+                font-size: 12px;
             }
         }
     </style>
 </head>
-<body data-theme="dark">
+<body>
     <!-- Loading Screen -->
-    <div class="loader">
-        <div class="loader-content">
-            <div class="loader-spinner"></div>
-            <div class="loader-text">LOADING</div>
+    <div class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-text">VAIBHAV VERMA</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
         </div>
     </div>
 
@@ -691,25 +646,18 @@
     <!-- Navigation -->
     <nav>
         <div class="logo">VAIBHAV VERMA</div>
-        <ul>
-            <li><a href="#home">HOME</a></li>
-            <li><a href="#gallery">GALLERY</a></li>
-            <li><a href="#about">ABOUT</a></li>
-            <li><a href="#contact">CONTACT</a></li>
-        </ul>
-        <div class="controls">
-            <button class="theme-toggle" onclick="toggleTheme()">🌓 THEME</button>
-            <button class="color-picker" onclick="toggleColorPicker()">🎨 COLORS</button>
+        <div class="nav-right">
+            <ul>
+                <li><a href="#home">HOME</a></li>
+                <li><a href="#gallery">GALLERY</a></li>
+                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+            </ul>
+            <div class="theme-toggle" onclick="toggleTheme()">
+                <div class="theme-toggle-slider"></div>
+            </div>
         </div>
     </nav>
-
-    <!-- Color Picker Dropdown -->
-    <div class="color-options" id="colorOptions">
-        <div class="color-option color-dark active" onclick="setColorTheme('dark')" title="Dark"></div>
-        <div class="color-option color-blue" onclick="setColorTheme('blue')" title="Ocean Blue"></div>
-        <div class="color-option color-purple" onclick="setColorTheme('purple')" title="Purple Haze"></div>
-        <div class="color-option color-green" onclick="setColorTheme('green')" title="Forest Green"></div>
-    </div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -718,14 +666,15 @@
             <h1>BEYOND THE FRAME</h1>
             <p>CAPTURING MOMENTS THAT MATTER</p>
         </div>
+        <div class="scroll-indicator"></div>
     </section>
 
     <!-- Gallery Section -->
     <section id="gallery" class="gallery">
         <h2 class="section-title">PORTFOLIO</h2>
         
-        <!-- Category Filters -->
-        <div class="filters">
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">ALL</button>
             <button class="filter-btn" data-filter="landscape">LANDSCAPE</button>
             <button class="filter-btn" data-filter="portrait">PORTRAIT</button>
@@ -740,7 +689,6 @@
                 <div class="gallery-overlay">
                     <h3>VV</h3>
                     <p>Portrait Photography</p>
-                    <span class="category-tag">PORTRAIT</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
@@ -748,7 +696,6 @@
                 <div class="gallery-overlay">
                     <h3>Win</h3>
                     <p>Portrait Photography</p>
-                    <span class="category-tag">PORTRAIT</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="architecture" onclick="openLightbox(this)">
@@ -756,15 +703,13 @@
                 <div class="gallery-overlay">
                     <h3>4th Floor</h3>
                     <p>Architecture</p>
-                    <span class="category-tag">ARCHITECTURE</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
                 <img src="images/517.jpeg" alt="517">
                 <div class="gallery-overlay">
                     <h3>Unit 517</h3>
-                    <p>Photography</p>
-                    <span class="category-tag">PORTRAIT</span>
+                    <p>Portrait Photography</p>
                 </div>
             </div>
             <div class="gallery-item" data-category="automotive" onclick="openLightbox(this)">
@@ -772,39 +717,34 @@
                 <div class="gallery-overlay">
                     <h3>Audi</h3>
                     <p>Automotive Photography</p>
-                    <span class="category-tag">AUTOMOTIVE</span>
                 </div>
             </div>
-            <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
+            <div class="gallery-item" data-category="architecture" onclick="openLightbox(this)">
                 <img src="images/Axis.jpg" alt="Axis">
                 <div class="gallery-overlay">
-                    <h3>Axis</h3>
-                    <p>Landscape Photography</p>
-                    <span class="category-tag">LANDSCAPE</span>
+                    <h3>Axis Block</h3>
+                    <p>Architecture Photography</p>
                 </div>
             </div>
             <div class="gallery-item" data-category="product" onclick="openLightbox(this)">
                 <img src="images/Bangle.jpeg" alt="Bangle">
                 <div class="gallery-overlay">
                     <h3>Bangle</h3>
-                    <p>Product Photography</p>
-                    <span class="category-tag">PRODUCT</span>
+                    <p>Sunset Within Frame</p>
                 </div>
             </div>
-            <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
+            <div class="gallery-item" data-category="architecture" onclick="openLightbox(this)">
                 <img src="images/bharti.jpeg" alt="Bharti">
                 <div class="gallery-overlay">
-                    <h3>Bharti</h3>
-                    <p>Portrait Photography</p>
-                    <span class="category-tag">PORTRAIT</span>
+                    <h3>Bharti Block</h3>
+                    <p>Architecture Photography</p>
                 </div>
             </div>
-            <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
+            <div class="gallery-item" data-category="product" onclick="openLightbox(this)">
                 <img src="images/Ble.jpeg" alt="Ble">
                 <div class="gallery-overlay">
-                    <h3>Ble</h3>
-                    <p>Landscape Photography</p>
-                    <span class="category-tag">LANDSCAPE</span>
+                    <h3>Bottle</h3>
+                    <p>Product Photography</p>
                 </div>
             </div>
             <div class="gallery-item" data-category="automotive" onclick="openLightbox(this)">
@@ -812,7 +752,6 @@
                 <div class="gallery-overlay">
                     <h3>Car</h3>
                     <p>Automotive Photography</p>
-                    <span class="category-tag">AUTOMOTIVE</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
@@ -820,7 +759,6 @@
                 <div class="gallery-overlay">
                     <h3>Grand SC</h3>
                     <p>Landscape Photography</p>
-                    <span class="category-tag">LANDSCAPE</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
@@ -828,15 +766,13 @@
                 <div class="gallery-overlay">
                     <h3>Ground</h3>
                     <p>Outdoor Photography</p>
-                    <span class="category-tag">LANDSCAPE</span>
                 </div>
             </div>
-            <div class="gallery-item" data-category="architecture" onclick="openLightbox(this)">
+            <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
                 <img src="images/isb.jpg" alt="ISB">
                 <div class="gallery-overlay">
                     <h3>ISB</h3>
-                    <p>Architecture Photography</p>
-                    <span class="category-tag">ARCHITECTURE</span>
+                    <p>Traffic and Sunset</p>
                 </div>
             </div>
             <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
@@ -844,55 +780,48 @@
                 <div class="gallery-overlay">
                     <h3>Portrait</h3>
                     <p>Self Portrait</p>
-                    <span class="category-tag">PORTRAIT</span>
                 </div>
             </div>
-            <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
+            <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
                 <img src="images/point.jpeg" alt="Point">
                 <div class="gallery-overlay">
                     <h3>Point</h3>
-                    <p>Landscape Photography</p>
-                    <span class="category-tag">LANDSCAPE</span>
+                    <p>Portrait Photography</p>
                 </div>
             </div>
             <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
                 <img src="images/PR.jpeg" alt="PR">
                 <div class="gallery-overlay">
                     <h3>PR</h3>
-                    <p>Portrait Photography</p>
-                    <span class="category-tag">PORTRAIT</span>
+                    <p>Silhouette Portrait</p>
                 </div>
             </div>
             <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
                 <img src="images/PR2.jpeg" alt="PR2">
                 <div class="gallery-overlay">
                     <h3>PR 2</h3>
-                    <p>Portrait Photography</p>
-                    <span class="category-tag">PORTRAIT</span>
+                    <p>Silhouette Portrait</p>
                 </div>
             </div>
-            <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
+            <div class="gallery-item" data-category="portrait" onclick="openLightbox(this)">
                 <img src="images/RD.jpg" alt="RD">
                 <div class="gallery-overlay">
                     <h3>RD</h3>
-                    <p>Landscape Photography</p>
-                    <span class="category-tag">LANDSCAPE</span>
+                    <p>Portrait Photography</p>
                 </div>
             </div>
             <div class="gallery-item" data-category="product" onclick="openLightbox(this)">
                 <img src="images/Specs.jpeg" alt="Specs">
                 <div class="gallery-overlay">
-                    <h3>Specs</h3>
+                    <h3>Sunset Within Frame</h3>
                     <p>Product Photography</p>
-                    <span class="category-tag">PRODUCT</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="landscape" onclick="openLightbox(this)">
                 <img src="images/Sukhna.jpeg" alt="Sukhna">
                 <div class="gallery-overlay">
-                    <h3>Sukhna</h3>
+                    <h3>Traffic and Sunset</h3>
                     <p>Landscape Photography</p>
-                    <span class="category-tag">LANDSCAPE</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="architecture" onclick="openLightbox(this)">
@@ -900,7 +829,6 @@
                 <div class="gallery-overlay">
                     <h3>SWC</h3>
                     <p>Architecture Photography</p>
-                    <span class="category-tag">ARCHITECTURE</span>
                 </div>
             </div>
             <div class="gallery-item" data-category="architecture" onclick="openLightbox(this)">
@@ -908,4 +836,169 @@
                 <div class="gallery-overlay">
                     <h3>SWC 2</h3>
                     <p>Architecture Photography</p>
-                    <span class="category
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <h2 class="section-title">ABOUT ME</h2>
+        <div class="about-content">
+            <img src="images/profile_VV.jpg" alt="Profile">
+            <p>
+                Nature creates. I simply notice and try to hold on to the beauty it
+                leaves behind. I'm still learning, still wandering, and always in awe.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">GET IN TOUCH</h2>
+        <div class="contact-content">
+            <form onsubmit="handleSubmit(event)">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" required></textarea>
+                <button type="submit"><span>SEND MESSAGE</span></button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Vaibhav's Photography. All rights reserved.</p>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <img src="" alt="Lightbox Image">
+        </div>
+    </div>
+
+    <script>
+        // Loading Screen
+        window.addEventListener('load', () => {
+            const progress = document.querySelector('.loading-progress');
+            let width = 0;
+            const interval = setInterval(() => {
+                width += 10;
+                progress.style.width = width + '%';
+                if (width >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.querySelector('.loading-screen').classList.add('hidden');
+                    }, 500);
+                }
+            }, 100);
+        });
+
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Cursor hover effect
+        const hoverElements = document.querySelectorAll('a, button, .gallery-item, .theme-toggle');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Gallery Filter
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Lightbox functionality
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const lightbox = document.querySelector('.lightbox');
+            const lightboxImg = lightbox.querySelector('img');
+            lightboxImg.src = img.src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.querySelector('.lightbox').classList.remove('active');
+        }
+
+        // Contact form submission
+        function handleSubmit(e) {
+            e.preventDefault();
+            alert('Thank you for your message! I will get back to you soon.');
+            e.target.reset();
+        }
+
+        // Escape key to close lightbox
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
