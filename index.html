@@ -880,21 +880,31 @@
     </div>
 
     <script>
-        // Loading Screen
-        window.addEventListener('load', () => {
-            const progress = document.querySelector('.loading-progress');
-            let width = 0;
-            const interval = setInterval(() => {
-                width += 10;
-                progress.style.width = width + '%';
-                if (width >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        document.querySelector('.loading-screen').classList.add('hidden');
-                    }, 500);
-                }
-            }, 100);
-        });
+        // Loading Screen - only show on first visit ever
+        const hasVisited = localStorage.getItem('hasVisited');
+        const loadingScreen = document.querySelector('.loading-screen');
+        
+        if (hasVisited) {
+            // Hide loading screen immediately if already visited
+            loadingScreen.classList.add('hidden');
+        } else {
+            // Show loading animation on first visit
+            window.addEventListener('load', () => {
+                const progress = document.querySelector('.loading-progress');
+                let width = 0;
+                const interval = setInterval(() => {
+                    width += 20;
+                    progress.style.width = width + '%';
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            loadingScreen.classList.add('hidden');
+                            localStorage.setItem('hasVisited', 'true');
+                        }, 300);
+                    }
+                }, 50);
+            });
+        }
 
         // Custom Cursor
         const cursor = document.querySelector('.cursor');
