@@ -219,8 +219,16 @@
             font-size: 24px;
             display: block;
             opacity: 1;
-            color: var(--text-primary);
-            text-decoration: none;
+            color: var(--text-primary) !important;
+            text-decoration: none !important;
+        }
+
+        .mobile-menu a:visited,
+        .mobile-menu a:link,
+        .mobile-menu a:active,
+        .mobile-menu a:hover {
+            color: var(--text-primary) !important;
+            text-decoration: none !important;
         }
 
         .mobile-menu a:hover {
@@ -242,6 +250,13 @@
             letter-spacing: 1px;
             transition: opacity 0.3s;
             position: relative;
+        }
+
+        nav a:visited,
+        nav a:link,
+        nav a:active {
+            color: var(--text-primary);
+            text-decoration: none;
         }
 
         nav a::after {
