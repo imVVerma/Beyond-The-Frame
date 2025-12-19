@@ -208,12 +208,23 @@
         .mobile-menu ul {
             flex-direction: column;
             gap: 30px;
+            list-style: none;
+        }
+
+        .mobile-menu li {
+            list-style: none;
         }
 
         .mobile-menu a {
             font-size: 24px;
             display: block;
             opacity: 1;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .mobile-menu a:hover {
+            opacity: 0.6;
         }
 
         .mobile-menu a::after {
