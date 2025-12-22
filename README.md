@@ -1,44 +1,48 @@
 Photography Portfolio
 
-A single page portfolio website showcasing my work in landscapes, portraits, automotive, architecture, and product photography.
+Photography portfolio showcasing my work in landscapes, portraits, automotive, architecture, and product photography.
 
-Live Site
+Live Site:
+imvverma.github.io/beyond-the-frame
 
 About
 
-This repository contains:
+This repository includes:
 
-index.html with the complete website code
+1. index.html containing the complete site structure and code
 
-images/ folder containing all photography work
+2. images/ folder holding all showcased photography
 
-The site is built using HTML, CSS, and JavaScript and is hosted through GitHub Pages.
+Built with HTML, CSS, and JavaScript and hosted through GitHub Pages.
 
 Features
 
-Light and dark theme switch
+1. Light and dark theme switch
 
-Mobile friendly navigation
+2. Mobile friendly navigation
 
-Image filtering system
+3. Image category filtering
 
-Full screen lightbox preview
+4. Full screen lightbox view
 
 Running Locally
 
-Download or clone the repository and open index.html in any browser.
+1. Download or clone the repository
+
+2. Open index.html in any browser
 
 Tools Used
 
-HTML
+1. HTML
 
-CSS
+2. CSS
 
-JavaScript
+3. JavaScript
 
-Credits  
+4. VS Code
 
-Claude AI
-VS Code
+5. GitHub Pages
 
-GitHub Pages for hosting
+Credits
+
+1. Claude AI for assistance with design and interactions
