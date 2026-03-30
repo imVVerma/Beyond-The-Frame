@@ -3,7 +3,7 @@ Photography Portfolio
 Photography portfolio showcasing my work in landscapes, portraits, automotive, architecture, and product photography.
 
 Live Site:
-imvverma.github.io/beyond-the-frame
+https://imvverma.github.io/Beyond-The-Frame/
 
 About
 
