@@ -4,19 +4,41 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../lib/authContext";
 import Navbar from "../../components/Navbar";
+import { getRedirectResult } from "firebase/auth";
+import { auth } from "../../lib/firebase";
 
 export default function LoginPage() {
   const { user, loginWithGoogle } = useAuth();
   const [error, setError] = useState("");
   const [signingIn, setSigningIn] = useState(false);
+  const [checkingRedirect, setCheckingRedirect] = useState(true);
   const router = useRouter();
 
-  // Redirect if already logged in
+  // 1. Handle the redirect result when coming back from Google
   useEffect(() => {
-    if (user) {
+    const handleRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          // Success! authContext will update 'user' and the next useEffect will redirect
+          router.push("/admin");
+        }
+      } catch (err: any) {
+        console.error("Redirect check failed:", err);
+        setError(err.message);
+      } finally {
+        setCheckingRedirect(false);
+      }
+    };
+    handleRedirect();
+  }, [router]);
+
+  // 2. Redirect if already logged in
+  useEffect(() => {
+    if (user && !checkingRedirect) {
       router.push("/admin");
     }
-  }, [user, router]);
+  }, [user, checkingRedirect, router]);
 
   const handleLogin = async () => {
     setSigningIn(true);
