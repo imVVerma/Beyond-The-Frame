@@ -20,8 +20,8 @@ export default function LoginPage() {
       try {
         const result = await getRedirectResult(auth);
         if (result?.user) {
-          // Success! authContext will update 'user' and the next useEffect will redirect
-          router.push("/admin");
+          // Success! hard redirect to ensure the Middleware sees the new cookie
+          window.location.href = "/admin";
         }
       } catch (err: any) {
         console.error("Redirect check failed:", err);
@@ -31,14 +31,14 @@ export default function LoginPage() {
       }
     };
     handleRedirect();
-  }, [router]);
+  }, []);
 
-  // 2. Redirect if already logged in
+  // 2. Redirect if already logged in (for manual visits to /login)
   useEffect(() => {
     if (user && !checkingRedirect) {
-      router.push("/admin");
+      window.location.href = "/admin";
     }
-  }, [user, checkingRedirect, router]);
+  }, [user, checkingRedirect]);
 
   const handleLogin = async () => {
     setSigningIn(true);
