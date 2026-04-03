@@ -11,42 +11,24 @@ export default function LoginPage() {
   const { user, loginWithGoogle } = useAuth();
   const [error, setError] = useState("");
   const [signingIn, setSigningIn] = useState(false);
-  const [checkingRedirect, setCheckingRedirect] = useState(true);
-  const router = useRouter();
 
-  // 1. Handle the redirect result when coming back from Google
+  // 1. Redirect if already logged in
   useEffect(() => {
-    const handleRedirect = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          // Success! hard redirect to ensure the Middleware sees the new cookie
-          window.location.href = "/admin";
-        }
-      } catch (err: any) {
-        console.error("Redirect check failed:", err);
-        setError(err.message);
-      } finally {
-        setCheckingRedirect(false);
-      }
-    };
-    handleRedirect();
-  }, []);
-
-  // 2. Redirect if already logged in (for manual visits to /login)
-  useEffect(() => {
-    if (user && !checkingRedirect) {
+    if (user) {
+      document.cookie = `auth-session=true; path=/; max-age=3600; SameSite=Lax`;
       window.location.href = "/admin";
     }
-  }, [user, checkingRedirect]);
+  }, [user]);
 
   const handleLogin = async () => {
     setSigningIn(true);
     setError("");
     try {
       await loginWithGoogle();
-      // Redirect happens in useEffect
+      // The popup succeeds, the context sets the cookie, and we hard redirect.
+      window.location.href = "/admin";
     } catch (err: any) {
+      console.error("Login Error:", err);
       setError(err.message || "Failed to sign in. Please try again.");
       setSigningIn(false);
     }

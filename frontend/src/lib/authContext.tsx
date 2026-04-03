@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { 
   onAuthStateChanged, 
-  signInWithRedirect, 
+  signInWithPopup, 
   signOut, 
   User 
 } from "firebase/auth";
@@ -41,7 +41,9 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
 
   const loginWithGoogle = async () => {
     try {
-      await signInWithRedirect(auth, googleProvider);
+      await signInWithPopup(auth, googleProvider);
+      // Explicitly set cookie immediately upon popup success to avoid race conditions
+      document.cookie = `auth-session=true; path=/; max-age=3600; SameSite=Lax`;
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
