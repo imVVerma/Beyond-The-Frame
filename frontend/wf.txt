@@ -1,0 +1,134 @@
+# Workflow.md
+
+This workflow is a practical, build-first plan tailored to this repo. It assumes we keep your existing `pp.html` as a design reference while we incrementally migrate to a modern, dynamic portfolio.
+
+---
+
+## 0) Ground Rules
+
+- Keep scope tight: build one working slice at a time.
+- Every step should leave the project runnable.
+- Do not add complexity until the previous step is stable.
+
+---
+
+## 1) Phase 1 — Static UI (HTML-only, reference build)
+
+Goal: lock visual direction and layout.
+
+Tasks:
+- Keep `pp.html` as the visual reference.
+- Refine hero, gallery grid, and about/contact until it feels “final”.
+- Ensure mobile layout looks intentional (not just stacked).
+
+Exit Criteria:
+- You love the static design.
+- You can open `pp.html` and be proud to show it.
+
+---
+
+## 2) Phase 2 — Project Setup (Next.js + Tailwind)
+
+Goal: create the app shell.
+
+Tasks:
+- Initialize Next.js app.
+- Add Tailwind and base typography/colors.
+- Recreate the `pp.html` layout as a Next page.
+
+Exit Criteria:
+- Next.js page matches the `pp.html` visual direction.
+- No backend yet — just UI.
+
+---
+
+## 3) Phase 3 — Firebase Wiring (Storage + Firestore)
+
+Goal: enable real uploads and data storage.
+
+Tasks:
+- Create Firebase project.
+- Add Storage + Firestore.
+- Add env config to Next.
+
+Data Model (Firestore):
+```
+photos/
+  doc: {
+    title: string,
+    category: string,
+    url: string,
+    createdAt: timestamp
+  }
+```
+
+Exit Criteria:
+- We can upload an image and save metadata.
+
+---
+
+## 4) Phase 4 — Upload UI + Logic
+
+Goal: creator dashboard section.
+
+Tasks:
+- Build a modal or page for upload.
+- Add fields: file, title, category (dropdown + add new).
+- Upload image to Storage.
+- Save metadata to Firestore.
+
+Exit Criteria:
+- Uploading from mobile or desktop works.
+- New uploads appear in the database.
+
+---
+
+## 5) Phase 5 — Dynamic Gallery
+
+Goal: gallery auto-populates from Firestore.
+
+Tasks:
+- Fetch photos from Firestore.
+- Render cards dynamically.
+- Build category filters from Firestore data.
+
+Exit Criteria:
+- New uploads show in gallery without code changes.
+
+---
+
+## 6) Phase 6 — Motion + Polish
+
+Goal: final product feel.
+
+Tasks:
+- Add staggered load-in animations.
+- Add smooth hover transitions.
+- Upgrade lightbox with next/prev navigation.
+
+Exit Criteria:
+- Feels premium and cinematic.
+
+---
+
+## 7) Phase 7 — Optional Features
+
+Only after everything above is stable:
+- Blog section.
+- Admin login.
+- Likes/comments.
+
+---
+
+## Current Status
+
+- We are at Phase 1 (static UI reference).
+- `pp.html` is the approved design direction.
+
+---
+
+## Next Step
+
+Proceed to Phase 2: bootstrap Next.js + Tailwind and recreate the layout.
+
+If you want, I can start Phase 2 immediately.

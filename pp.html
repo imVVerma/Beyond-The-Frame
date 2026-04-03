@@ -1,21 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vaibhav's Photography</title>
+    <title>Vaibhav Verma | Photography</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@300;400;500;600&display=swap');
+
+        :root {
+            --bg: #0b0b0c;
+            --bg-2: #141417;
+            --text: #f3f1ed;
+            --muted: #bdb8b0;
+            --accent: #d1a96b;
+            --accent-2: #7aa6a1;
+            --card: rgba(255, 255, 255, 0.04);
+            --line: rgba(255, 255, 255, 0.12);
+            --shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: #000;
-            color: #fff;
+            font-family: 'Manrope', sans-serif;
+            background: radial-gradient(1200px 800px at 10% 0%, rgba(122, 166, 161, 0.15), transparent 60%),
+                radial-gradient(900px 700px at 90% 10%, rgba(209, 169, 107, 0.18), transparent 55%),
+                var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="180" height="180" filter="url(%23n)" opacity="0.07"/></svg>');
+            mix-blend-mode: soft-light;
+            z-index: 1;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+        }
+
+        .container {
+            width: min(1200px, 92vw);
+            margin: 0 auto;
         }
 
         /* Navigation */
@@ -23,165 +69,393 @@
             position: fixed;
             top: 0;
             width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             z-index: 1000;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            padding: 22px 6vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(180deg, rgba(11, 11, 12, 0.95) 0%, rgba(11, 11, 12, 0.2) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 2px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
         }
 
         nav ul {
             display: flex;
             list-style: none;
-            gap: 30px;
+            gap: 26px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         nav a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 14px;
-            letter-spacing: 1px;
-            transition: opacity 0.3s;
+            opacity: 0.75;
+            transition: opacity 0.3s ease;
         }
 
         nav a:hover {
-            opacity: 0.6;
+            opacity: 1;
         }
 
-        /* Hero Section */
+        /* Hero */
         .hero {
             height: 100vh;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            display: grid;
+            place-items: center;
+            padding: 140px 6vw 80px;
         }
 
-        .hero-bg {
+        .hero-media {
             position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .hero-media img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.7);
+            filter: saturate(0.9) brightness(0.6);
+            transform: scale(1.05);
+        }
+
+        .hero-media::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(11, 11, 12, 0.2) 0%, rgba(11, 11, 12, 0.8) 70%, rgba(11, 11, 12, 1) 100%);
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             text-align: center;
+            max-width: 760px;
         }
 
         .hero h1 {
-            font-size: 72px;
-            font-weight: 300;
-            letter-spacing: 8px;
-            margin-bottom: 20px;
-            animation: fadeInUp 1s ease;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(44px, 7vw, 96px);
+            letter-spacing: 6px;
+            font-weight: 500;
+            line-height: 1.05;
         }
 
         .hero p {
-            font-size: 18px;
-            letter-spacing: 3px;
-            font-weight: 300;
-            animation: fadeInUp 1s ease 0.3s both;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Gallery Section */
-        .gallery {
-            padding: 100px 50px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 48px;
-            font-weight: 300;
+            margin-top: 20px;
+            font-size: 16px;
+            text-transform: uppercase;
             letter-spacing: 4px;
-            margin-bottom: 60px;
+            color: var(--muted);
+        }
+
+        .hero-cta {
+            margin-top: 34px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.06);
+            transition: transform 0.3s ease, border 0.3s ease, background 0.3s ease;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .hero-meta {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--muted);
+        }
+
+        .hero-meta div {
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            background: rgba(10, 10, 12, 0.55);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(32px, 4vw, 54px);
+            letter-spacing: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .section-subtitle {
+            color: var(--muted);
+            max-width: 520px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Gallery */
+        .gallery {
+            padding: 120px 0 40px;
+        }
+
+        .gallery-header {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 40px;
+            align-items: end;
+            margin-bottom: 40px;
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .filter-btn {
+            border: 1px solid var(--line);
+            color: var(--muted);
+            background: transparent;
+            padding: 8px 16px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            background: rgba(209, 169, 107, 0.12);
         }
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 18px;
         }
 
         .gallery-item {
             position: relative;
             overflow: hidden;
-            aspect-ratio: 4/3;
+            border-radius: 18px;
+            background: var(--card);
             cursor: pointer;
+            box-shadow: var(--shadow);
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
         }
 
         .gallery-item:hover img {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
         .gallery-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            padding: 30px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 24px;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .gallery-item:hover .gallery-overlay {
-            transform: translateY(0);
+            opacity: 1;
         }
 
         .gallery-overlay h3 {
-            font-size: 20px;
-            font-weight: 400;
-            margin-bottom: 5px;
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
         }
 
         .gallery-overlay p {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--muted);
+        }
+
+        .col-6 {
+            grid-column: span 6;
+        }
+
+        .col-4 {
+            grid-column: span 4;
+        }
+
+        .row-2 {
+            grid-row: span 2;
+            min-height: 380px;
+        }
+
+        .row-1 {
+            min-height: 220px;
+        }
+
+        /* About */
+        .about {
+            padding: 120px 0 80px;
+            background: linear-gradient(180deg, rgba(20, 20, 23, 0.9) 0%, rgba(11, 11, 12, 0.9) 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .about-wrap {
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .about p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--muted);
+        }
+
+        .about .signature {
+            margin-top: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: var(--text);
+        }
+
+        /* Contact */
+        .contact {
+            padding: 100px 0 120px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 40px;
+        }
+
+        .contact-card {
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .contact form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .contact input,
+        .contact textarea {
+            background: rgba(8, 8, 10, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: var(--text);
             font-size: 14px;
-            opacity: 0.8;
+            font-family: inherit;
+        }
+
+        .contact textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .contact button {
+            background: var(--accent);
+            color: #1a1207;
+            border: none;
+            padding: 14px 20px;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .contact button:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .contact-list span {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 11px;
+            color: var(--text);
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 0 60px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         /* Lightbox */
         .lightbox {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
+            inset: 0;
+            background: rgba(6, 6, 8, 0.97);
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            padding: 40px;
         }
 
         .lightbox.active {
@@ -189,405 +463,380 @@
         }
 
         .lightbox-content {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: min(1100px, 92vw);
+            max-height: 80vh;
             position: relative;
+            text-align: center;
         }
 
         .lightbox img {
             max-width: 100%;
-            max-height: 90vh;
+            max-height: 70vh;
             object-fit: contain;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .lightbox-caption {
+            margin-top: 18px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .lightbox-close,
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            top: 24px;
+            font-size: 26px;
+            color: var(--text);
+            cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, background 0.3s ease;
         }
 
         .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            font-size: 40px;
-            color: #fff;
-            cursor: pointer;
-            z-index: 2001;
+            right: 24px;
         }
 
-        /* About Section */
-        .about {
-            padding: 100px 50px;
-            background: #0a0a0a;
+        .lightbox-prev {
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
+        .lightbox-next {
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        .about-content img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 40px;
+        .lightbox-close:hover,
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            transform: translateY(-50%) scale(1.05);
+            background: rgba(255, 255, 255, 0.16);
         }
 
-        .about-content p {
-            font-size: 18px;
-            line-height: 1.8;
-            font-weight: 300;
-            margin-bottom: 20px;
+        .lightbox-close:hover {
+            transform: scale(1.05);
         }
 
-        /* Contact Section */
-        .contact {
-            padding: 100px 50px;
+        /* Motion */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            animation: reveal 0.9s ease forwards;
         }
 
-        .contact-content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .reveal.delay-1 { animation-delay: 0.2s; }
+        .reveal.delay-2 { animation-delay: 0.4s; }
+        .reveal.delay-3 { animation-delay: 0.6s; }
 
-        .contact form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .contact input,
-        .contact textarea {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            padding: 15px;
-            color: #fff;
-            font-size: 16px;
-            font-family: inherit;
-        }
-
-        .contact textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .contact button {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 15px 40px;
-            font-size: 16px;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .contact button:hover {
-            background: #ddd;
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px 50px;
-            text-align: center;
-            background: #0a0a0a;
-            font-size: 14px;
-            opacity: 0.6;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            nav {
-                padding: 20px;
+        @keyframes reveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
+        }
 
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
             nav ul {
-                gap: 15px;
+                display: none;
             }
 
-            .hero h1 {
-                font-size: 36px;
-                letter-spacing: 4px;
-            }
-
-            .hero p {
-                font-size: 14px;
-            }
-
-            .gallery {
-                padding: 60px 20px;
-            }
-
-            .gallery-grid {
+            .hero-meta {
                 grid-template-columns: 1fr;
             }
 
-            .section-title {
-                font-size: 32px;
+            .gallery-header {
+                grid-template-columns: 1fr;
+                gap: 18px;
             }
 
-            .about, .contact {
-                padding: 60px 20px;
+            .filters {
+                justify-content: flex-start;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(6, minmax(0, 1fr));
+            }
+
+            .col-6 {
+                grid-column: span 6;
+            }
+
+            .col-4 {
+                grid-column: span 6;
+            }
+
+            .row-2 {
+                min-height: 280px;
+            }
+
+            .about-wrap {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero {
+                padding: 120px 6vw 60px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .col-6,
+            .col-4 {
+                grid-column: span 2;
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- Navigation -->
     <nav>
-        <div class="logo">VAIBHAV VERMA</div>
+        <div class="logo">Vaibhav Verma</div>
         <ul>
-            <li><a href="#home">HOME</a></li>
-            <li><a href="#gallery">GALLERY</a></li>
-            <li><a href="#about">ABOUT</a></li>
-            <li><a href="#contact">CONTACT</a></li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#gallery">Portfolio</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
-    <!-- Hero Section -->
     <section id="home" class="hero">
-        <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=1600" alt="Hero" class="hero-bg">
+        <div class="hero-media">
+            <img src="images/GrandSC.jpg" alt="Hero photograph">
+        </div>
         <div class="hero-content">
-            <h1>BEYOND THE FRAME</h1>
-            <p>CAPTURING MOMENTS THAT MATTER</p>
+            <h1 class="reveal">Beyond the Frame</h1>
+            <p class="reveal delay-1">A Quiet Archive of Light and Weather</p>
+            <a class="hero-cta reveal delay-2" href="#gallery">View the Gallery</a>
+            <div class="hero-meta reveal delay-3">
+                <div>Based in India</div>
+                <div>Landscape + Portrait</div>
+                <div>Available for collaborations</div>
+            </div>
         </div>
     </section>
 
-    <!-- Gallery Section -->
-<section id="gallery" class="gallery">
-    <h2 class="section-title">PORTFOLIO</h2>
-    <div class="gallery-grid">
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/VV.jpeg" alt="VV">
-            <div class="gallery-overlay">
-                <h3>VV</h3>
-                <p>Photography</p>
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="gallery-header">
+                <div>
+                    <h2 class="section-title">Portfolio</h2>
+                    <p class="section-subtitle">A curated collection of places, forms, and fleeting light. Filter by category or explore the full narrative.</p>
+                </div>
+                <div class="filters" id="filters"></div>
             </div>
+            <div class="gallery-grid" id="gallery-grid"></div>
         </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/win.jpeg" alt="Win">
-            <div class="gallery-overlay">
-                <h3>Win</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/4thF.jpeg" alt="4thF">
-            <div class="gallery-overlay">
-                <h3>4th Floor</h3>
-                <p>Architecture</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/517.jpeg" alt="517">
-            <div class="gallery-overlay">
-                <h3>Unit 517</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/audi.jpeg" alt="Audi">
-            <div class="gallery-overlay">
-                <h3>Audi</h3>
-                <p>Photography
-                </p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/Axis.jpg" alt="Axis">
-            <div class="gallery-overlay">
-                <h3>Axis Block</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/Bangle.jpeg" alt="Bangle">
-            <div class="gallery-overlay">
-                <h3>Bangle</h3>
-                <p>Sunset Within Frame</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/bharti.jpeg" alt="Bharti">
-            <div class="gallery-overlay">
-                <h3>Bharti Block</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/Ble.jpeg" alt="Ble">
-            <div class="gallery-overlay">
-                <h3>Bottle</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/car.jpg" alt="Car">
-            <div class="gallery-overlay">
-                <h3>Car</h3>
-                <p>Automotive</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/GrandSC.jpg" alt="GrandSC">
-            <div class="gallery-overlay">
-                <h3>Grand SC</h3>
-                <p>Landscape</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/Ground.jpg" alt="Ground">
-            <div class="gallery-overlay">
-                <h3>Ground</h3>
-                <p>Outdoor</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/isb.jpg" alt="ISB">
-            <div class="gallery-overlay">
-                <h3>ISB</h3>
-                <p>Traffic and Sunset
-                </p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/me.jpeg" alt="Me">
-            <div class="gallery-overlay">
-                <h3>Portrait</h3>
-                <p>Me</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/point.jpeg" alt="Point">
-            <div class="gallery-overlay">
-                <h3>Point</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/PR.jpeg" alt="PR">
-            <div class="gallery-overlay">
-                <h3>PR</h3>
-                <p>Silhoutte</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/PR2.jpeg" alt="PR2">
-            <div class="gallery-overlay">
-                <h3>PR 2</h3>
-                <p>Silhoutte</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/RD.jpg" alt="RD">
-            <div class="gallery-overlay">
-                <h3>RD</h3>
-                <p>Portrait
-                </p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/Specs.jpeg" alt="Specs">
-            <div class="gallery-overlay">
-                <h3>Sunset Within Frame</h3>
-                <p>Product</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/Sukhna.jpeg" alt="Sukhna">
-            <div class="gallery-overlay">
-                <h3>Traffic and Sunset</h3>
-                <p>Landscape</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/SWC.jpg" alt="SWC">
-            <div class="gallery-overlay">
-                <h3>SWC</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-        <div class="gallery-item" onclick="openLightbox(this)">
-            <img src="images/swc2.jpeg" alt="SWC2">
-            <div class="gallery-overlay">
-                <h3>SWC 2</h3>
-                <p>Photography</p>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
-    <!-- About Section -->
     <section id="about" class="about">
-        <h2 class="section-title">ABOUT ME</h2>
-        <div class="about-content">
-            <img src="images/profile_VV.jpg" alt="Profile">
-            <p>
-                Nature creates. I simply notice and try to hold on to the beauty it
-                leaves behind. I'm still learning,still wandering, and always in awe.
-            </p>
+        <div class="container about-wrap">
+            <img src="images/profile_VV.jpg" alt="Vaibhav Verma portrait">
+            <div>
+                <h2 class="section-title">About</h2>
+                <p>
+                    Nature creates. I simply notice and try to hold on to the beauty it leaves behind.
+                    I am still learning, still wandering, and always in awe of the small moments that make a place feel alive.
+                </p>
+                <div class="signature">Vaibhav Verma</div>
+            </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact" class="contact">
-        <h2 class="section-title">GET IN TOUCH</h2>
-        <div class="contact-content">
-            <form onsubmit="handleSubmit(event)">
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <textarea placeholder="Your Message" required></textarea>
-                <button type="submit">SEND MESSAGE</button>
-            </form>
+        <div class="container">
+            <div class="contact-grid">
+                <div>
+                    <h2 class="section-title">Get in Touch</h2>
+                    <p class="section-subtitle">If a frame speaks to you or you would like to work together, I would love to hear from you.</p>
+                    <div class="contact-card" style="margin-top: 26px;">
+                        <div class="contact-list">
+                            <div><span>Email</span><br>vaibhav@example.com</div>
+                            <div><span>Instagram</span><br>@vaibhav.frames</div>
+                            <div><span>Location</span><br>Chandigarh, India</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <form onsubmit="handleSubmit(event)">
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                        <textarea placeholder="Your Message" required></textarea>
+                        <button type="submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Vaibhav's Photography. All rights reserved.</p>
+        <p>&copy; 2026 Vaibhav Verma Photography</p>
     </footer>
 
-    <!-- Lightbox -->
     <div class="lightbox" onclick="closeLightbox()">
-        <span class="lightbox-close">&times;</span>
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-prev" onclick="navigateLightbox(-1)">&#10094;</span>
         <div class="lightbox-content" onclick="event.stopPropagation()">
-            <img src="" alt="Lightbox Image">
+            <img src="" alt="Expanded photograph">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
         </div>
+        <span class="lightbox-next" onclick="navigateLightbox(1)">&#10095;</span>
     </div>
 
     <script>
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                target.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
+        const PHOTOS = [
+            { src: 'images/VV.jpeg', title: 'VV', category: 'Generic', alt: 'Portrait of VV', layout: 'col-4 row-1' },
+            { src: 'images/win.jpeg', title: 'Win', category: 'Generic', alt: 'A winning moment', layout: 'col-4 row-1' },
+            { src: 'images/4thF.jpeg', title: '4th Floor', category: 'Architecture', alt: 'Architecture shot of 4th Floor', layout: 'col-4 row-1' },
+            { src: 'images/517.jpeg', title: 'Unit 517', category: 'Generic', alt: 'Interior shot of Unit 517', layout: 'col-6 row-2' },
+            { src: 'images/audi.jpeg', title: 'Audi', category: 'Automotive', alt: 'Luxury Audi car', layout: 'col-6 row-1' },
+            { src: 'images/Axis.jpg', title: 'Axis Block', category: 'Architecture', alt: 'Modern architecture of Axis Block', layout: 'col-6 row-1' },
+            { src: 'images/Bangle.jpeg', title: 'Bangle', category: 'Product', alt: 'Artistic shot of a bangle', layout: 'col-4 row-1' },
+            { src: 'images/bharti.jpeg', title: 'Bharti Block', category: 'Architecture', alt: 'Bharti Block architectural detail', layout: 'col-4 row-1' },
+            { src: 'images/Ble.jpeg', title: 'Bottle', category: 'Product', alt: 'Product photography of a bottle', layout: 'col-4 row-1' },
+            { src: 'images/car.jpg', title: 'Car', category: 'Automotive', alt: 'Automotive photography of a classic car', layout: 'col-6 row-1' },
+            { src: 'images/GrandSC.jpg', title: 'Grand SC', category: 'Landscape', alt: 'Grand landscape scenery', layout: 'col-6 row-2' },
+            { src: 'images/Ground.jpg', title: 'Ground', category: 'Landscape', alt: 'Open ground under a blue sky', layout: 'col-6 row-1' },
+            { src: 'images/isb.jpg', title: 'ISB', category: 'Landscape', alt: 'Landscape view of ISB', layout: 'col-4 row-1' },
+            { src: 'images/me.jpeg', title: 'Portrait', category: 'Portrait', alt: 'Self-portrait', layout: 'col-4 row-1' },
+            { src: 'images/point.jpeg', title: 'Point', category: 'Generic', alt: 'Scenic point photography', layout: 'col-4 row-1' },
+            { src: 'images/PR.jpeg', title: 'PR', category: 'Silhouette', alt: 'Silhouette at sunset', layout: 'col-6 row-1' },
+            { src: 'images/PR2.jpeg', title: 'PR 2', category: 'Silhouette', alt: 'Another silhouette at sunset', layout: 'col-4 row-1' },
+            { src: 'images/RD.jpg', title: 'RD', category: 'Portrait', alt: 'A classic portrait', layout: 'col-4 row-1' },
+            { src: 'images/Specs.jpeg', title: 'Sunset Within Frame', category: 'Product', alt: 'Product shot of glasses reflecting sunset', layout: 'col-6 row-1' },
+            { src: 'images/Sukhna.jpeg', title: 'Traffic and Sunset', category: 'Landscape', alt: 'Traffic and sunset at Sukhna Lake', layout: 'col-6 row-2' },
+            { src: 'images/SWC.jpg', title: 'SWC', category: 'Architecture', alt: 'Architecture of SWC', layout: 'col-4 row-1' },
+            { src: 'images/swc2.jpeg', title: 'SWC 2', category: 'Architecture', alt: 'Another shot of SWC architecture', layout: 'col-4 row-1' }
+        ];
 
-        // Lightbox functionality
-        function openLightbox(element) {
-            const img = element.querySelector('img');
-            const lightbox = document.querySelector('.lightbox');
-            const lightboxImg = lightbox.querySelector('img');
-            lightboxImg.src = img.src;
+        const grid = document.getElementById('gallery-grid');
+        const filtersWrap = document.getElementById('filters');
+        const lightbox = document.querySelector('.lightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+
+        let currentFilter = 'All';
+        let currentIndex = 0;
+        let filteredPhotos = [...PHOTOS];
+
+        function renderFilters() {
+            const categories = ['All', ...new Set(PHOTOS.map(photo => photo.category))];
+            filtersWrap.innerHTML = '';
+
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = `filter-btn${category === currentFilter ? ' active' : ''}`;
+                button.textContent = category;
+                button.onclick = () => {
+                    currentFilter = category;
+                    renderGallery();
+                    renderFilters();
+                };
+                filtersWrap.appendChild(button);
+            });
+        }
+
+        function renderGallery() {
+            grid.innerHTML = '';
+            filteredPhotos = currentFilter === 'All'
+                ? [...PHOTOS]
+                : PHOTOS.filter(photo => photo.category === currentFilter);
+
+            filteredPhotos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = `gallery-item ${photo.layout || 'col-4 row-1'}`;
+                item.onclick = () => openLightbox(index);
+
+                item.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.alt}" loading="lazy">
+                    <div class="gallery-overlay">
+                        <h3>${photo.title}</h3>
+                        <p>${photo.category}</p>
+                    </div>
+                `;
+
+                grid.appendChild(item);
+            });
+        }
+
+        function openLightbox(index) {
+            currentIndex = index;
+            const photo = filteredPhotos[currentIndex];
+            lightboxImg.src = photo.src;
+            lightboxCaption.textContent = `${photo.title} — ${photo.category}`;
             lightbox.classList.add('active');
         }
 
         function closeLightbox() {
-            document.querySelector('.lightbox').classList.remove('active');
+            lightbox.classList.remove('active');
         }
 
-        // Contact form submission
+        function navigateLightbox(direction) {
+            if (!filteredPhotos.length) return;
+            currentIndex = (currentIndex + direction + filteredPhotos.length) % filteredPhotos.length;
+            const photo = filteredPhotos[currentIndex];
+            lightboxImg.src = photo.src;
+            lightboxCaption.textContent = `${photo.title} — ${photo.category}`;
+        }
+
         function handleSubmit(e) {
             e.preventDefault();
-            alert('Thank you for your message! I will get back to you soon.');
-            e.target.reset();
+            const form = e.target;
+            const name = form.querySelector('input[type="text"]').value;
+            const email = form.querySelector('input[type="email"]').value;
+            const message = form.querySelector('textarea').value;
+
+            fetch('http://localhost:3000/api/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, message })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Thank you for your message! I will get back to you soon.');
+                    form.reset();
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
+            }).catch(() => {
+                alert('Connection error. Please make sure the backend server is running.');
+            });
         }
 
-        // Escape key to close lightbox
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeLightbox();
-            }
+        document.addEventListener('keydown', function (e) {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
         });
+
+        renderFilters();
+        renderGallery();
     </script>
 </body>
+
 </html>
