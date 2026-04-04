@@ -229,29 +229,63 @@ nav a:hover {
   padding: 150px 6vw 80px;
 }
 
-.lightbox-caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+/* Lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 6, 8, 0.98);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
   padding: 40px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
-  color: #fff;
+  backdrop-filter: blur(15px);
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox-content {
+  max-width: min(1200px, 94vw);
+  max-height: 94vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.lightbox-image-container {
+  position: relative;
+  width: 100%;
+  flex: 1; /* Take all available space minus the caption */
+  min-height: 50vh;
+  max-height: 75vh;
+}
+
+.lightbox-caption {
   text-align: center;
+  max-width: 800px;
+  width: 100%;
+  padding-bottom: 20px;
 }
 
 .lightbox-caption h3 {
   font-family: var(--font-bodoni), serif;
-  font-size: 32px;
+  font-size: clamp(24px, 4vw, 36px);
   margin-bottom: 8px;
   font-weight: 500;
   letter-spacing: 2px;
+  color: #fff;
 }
 
 .lightbox-caption p {
   color: var(--muted);
-  font-size: 14px;
-  letter-spacing: 4px;
+  font-size: 13px;
+  letter-spacing: 3px;
   text-transform: uppercase;
 }
 
@@ -635,42 +669,7 @@ footer {
   letter-spacing: 2px;
 }
 
-.lightbox {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(6, 6, 8, 0.97);
-  z-index: 2000;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-}
-
-.lightbox.active {
-  display: flex;
-}
-
-.lightbox-content {
-  max-width: min(1100px, 92vw);
-  max-height: 80vh;
-  position: relative;
-  text-align: center;
-}
-
-.lightbox-image-container {
-  position: relative;
-  width: 100%;
-  height: 70vh;
-}
-
-.lightbox-caption {
-  margin-top: 18px;
-  font-size: 14px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
+/* Navigation controls override */
 .lightbox-close,
 .lightbox-prev,
 .lightbox-next {
