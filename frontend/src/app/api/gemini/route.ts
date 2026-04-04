@@ -1,24 +1,26 @@
-"use server";
+import { NextResponse } from "next/server";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+// Allow this route to run for up to 60 seconds on Vercel to prevent AI timeouts
+export const maxDuration = 60; 
 
-/**
- * Server Action to generate a story using Gemini Pro Vision.
- * This keeps the API key safely on the server.
- */
-export async function generateStoryWithAI({ imageBase64, mimeType }: { imageBase64: string, mimeType: string }) {
-  const apiKey = process.env.GEMINI_API_KEY;
-
-  if (!apiKey) {
-    return { success: false, error: "GEMINI_API_KEY is missing in Vercel Environment Variables." };
-  }
-
+export async function POST(request: Request) {
   try {
+    const body = await request.json();
+    const { imageBase64, mimeType } = body;
+
+    if (!imageBase64 || !mimeType) {
+      return NextResponse.json({ success: false, error: "Image data and mimeType are required." }, { status: 400 });
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return NextResponse.json({ success: false, error: "GEMINI_API_KEY is missing in Vercel Environment Variables." }, { status: 500 });
+    }
+
     const model = "gemini-2.5-flash";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
     
-    console.log(`[AI Story] Calling Gemini API: ${model} on v1 endpoint...`);
-
     const prompt = `
       You are the photographer who just took this photo. Write a short 'Behind the Lens' journal entry about the experience of capturing it.
       
@@ -32,7 +34,7 @@ export async function generateStoryWithAI({ imageBase64, mimeType }: { imageBase
       - Output ONLY the story text, do not include titles.
     `;
 
-    const body = {
+    const geminiBody = {
       contents: [
         {
           parts: [
@@ -57,25 +59,25 @@ export async function generateStoryWithAI({ imageBase64, mimeType }: { imageBase
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(geminiBody)
     });
 
     if (!res.ok) {
       const errorData = await res.json();
-      return { success: false, error: errorData.error?.message || `HTTP ${res.status}: Failed to reach Gemini.` };
+      return NextResponse.json({ success: false, error: errorData.error?.message || `HTTP ${res.status}: Failed to reach Gemini.` }, { status: 502 });
     }
 
     const data = await res.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     
     if (!text) {
-      return { success: false, error: "Gemini returned an empty narrative. Please try a different photo." };
+      return NextResponse.json({ success: false, error: "Gemini returned an empty narrative. Please try a different photo." }, { status: 500 });
     }
 
-    return { success: true, text };
+    return NextResponse.json({ success: true, text });
+
   } catch (error: any) {
-    console.error("Gemini Direct API Error:", error);
-    return { success: false, error: error.message || "Unknown Gemini API error" };
+    console.error("Gemini API Route Error:", error);
+    return NextResponse.json({ success: false, error: error.message || "Unknown server error" }, { status: 500 });
   }
 }
-

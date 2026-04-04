@@ -6,7 +6,6 @@ import exifr from "exifr";
 import { addPhoto, deletePhoto, updatePhoto, subscribeToPhotos, PhotoData } from "../../lib/photoService";
 import { useAuth } from "../../lib/authContext";
 import Navbar from "../../components/Navbar";
-import { generateStoryWithAI } from "../../lib/geminiAction";
 import { Sparkles } from "lucide-react";
 
 const CATEGORIES = ["Landscape", "Architecture", "Portrait", "Silhouette", "Automotive", "Product", "Generic"];
@@ -226,11 +225,17 @@ export default function AdminPage() {
       reader.readAsDataURL(file);
       const imageBase64 = await base64Promise;
 
-      // 2. Call Gemini
-      const response = await generateStoryWithAI({ imageBase64, mimeType: file.type });
+      // 2. Call Gemini via standard API Route (Bypasses React Server Components serialization limits)
+      const res = await fetch("/api/gemini", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64, mimeType: file.type })
+      });
       
-      if (!response || !response.success) {
-        throw new Error(response?.error || "Unknown AI error occurred");
+      const response = await res.json();
+      
+      if (!res.ok || !response.success) {
+        throw new Error(response?.error || `HTTP ${res.status}: Unknown AI error occurred`);
       }
       
       if (response.text) {
