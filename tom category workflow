@@ -1,0 +1,30 @@
+[33m616eea0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Allowed editing of img details and addition of new categories
+[33m216c18f[m Structured the gallery Section
+[33m4886b61[m fix: revert to robust popup flow and enforce synchronous cookie state
+[33m3190bf9[m fix: hard redirect to fix middleware race condition
+[33mbbcd335[m force redeploy
+[33m87118bb[m fix: handle auth redirect result in login page
+[33m9ace8fc[m feat: harden admin security and switch to redirect auth flow
+[33m6226668[m Removed backend server from deployment
+[33m1221b41[m Removed node_modules from tracking
+[33m652b709[m Updated env example
+[33ma7fd9af[m Merge branch 'main' of https://github.com/imVVerma/Beyond-The-Frame
+[33md466bf8[m Updated gitignore and ensured env is ignored
+[33m88cefcd[m Delete test.txt
+[33m0e540ba[m remove env from tracking
+[33m94e72dd[m test commit
+[33m572c97a[m Resolved conflict: kept local version
+[33m263bf18[m Major Updates done to the folder
+[33m41e45f3[m Update live site URL in README
+[33m94bc6c4[m Revise README for clarity and formatting
+[33m3007b90[m Add README for photography portfolio website
+[33me2b2c94[m Enhance mobile menu link styles with !important
+[33mc4bf373[m Remove list-style from mobile menu items
+[33mf7415e3[m Adjust mobile menu styles and fix HTML structure
+[33mfac0566[m Implement mobile menu with toggle functionality
+[33mb843f6f[m Refactor loading screen event handling
+[33m867f4b0[m Refactor loading screen logic for first-time visitors
+[33mbfe5a7c[m Refactor themes, loading screen, and navigation
+[33m44b670b[m Implement theming and enhance gallery section
+[33m808e80f[m Rename pp.html to index.html
+[33m0336a72[m Initial commit - Photography portfolio
