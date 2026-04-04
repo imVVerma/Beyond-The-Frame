@@ -227,10 +227,14 @@ export default function AdminPage() {
       const imageBase64 = await base64Promise;
 
       // 2. Call Gemini
-      const draftStory = await generateStoryWithAI({ imageBase64, mimeType: file.type });
+      const response = await generateStoryWithAI({ imageBase64, mimeType: file.type });
       
-      if (draftStory) {
-        setStory(draftStory);
+      if (!response || !response.success) {
+        throw new Error(response?.error || "Unknown AI error occurred");
+      }
+      
+      if (response.text) {
+        setStory(response.text);
       }
     } catch (error: any) {
       console.error("AI Error:", error);

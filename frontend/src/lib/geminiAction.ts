@@ -10,12 +10,12 @@ export async function generateStoryWithAI({ imageBase64, mimeType }: { imageBase
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not configured in .env.local");
+    return { success: false, error: "GEMINI_API_KEY is missing in Vercel Environment Variables." };
   }
 
   try {
     const model = "gemini-2.5-flash";
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
     
     console.log(`[AI Story] Calling Gemini API: ${model} on v1 endpoint...`);
 
@@ -62,19 +62,20 @@ export async function generateStoryWithAI({ imageBase64, mimeType }: { imageBase
 
     if (!res.ok) {
       const errorData = await res.json();
-      throw new Error(errorData.error?.message || `HTTP ${res.status}: Failed to reach Gemini.`);
+      return { success: false, error: errorData.error?.message || `HTTP ${res.status}: Failed to reach Gemini.` };
     }
 
     const data = await res.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     
     if (!text) {
-      throw new Error("Gemini returned an empty narrative. Please try a different photo.");
+      return { success: false, error: "Gemini returned an empty narrative. Please try a different photo." };
     }
 
-    return text;
+    return { success: true, text };
   } catch (error: any) {
     console.error("Gemini Direct API Error:", error);
-    throw new Error(error.message || "Unknown Gemini API error");
+    return { success: false, error: error.message || "Unknown Gemini API error" };
   }
 }
+
