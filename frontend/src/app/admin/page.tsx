@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import exifr from "exifr";
-import { addPhoto, deletePhoto, subscribeToPhotos, PhotoData } from "../../lib/photoService";
+import { addPhoto, deletePhoto, updatePhoto, subscribeToPhotos, PhotoData } from "../../lib/photoService";
 import { useAuth } from "../../lib/authContext";
 import Navbar from "../../components/Navbar";
 import { generateStoryWithAI } from "../../lib/geminiAction";
@@ -24,8 +24,14 @@ export default function AdminPage() {
   const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Landscape");
+  const [customCategory, setCustomCategory] = useState("");
   const [alt, setAlt] = useState("");
   const [story, setStory] = useState("");
+  
+  // Edit State
+  const [editingPhoto, setEditingPhoto] = useState<PhotoData | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", category: "", customCategory: "", alt: "", story: "" });
+  const [editSaving, setEditSaving] = useState(false);
   const [exifData, setExifData] = useState<PhotoData["exif"] | null>(null);
   const [uploading, setUploading] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
@@ -58,6 +64,12 @@ export default function AdminPage() {
     });
     return () => unsubscribe();
   }, [user]);
+
+  // Dynamically compute unique categories
+  const uniqueCategories = Array.from(new Set([
+    ...CATEGORIES, 
+    ...photos.map(p => p.category)
+  ])).filter(Boolean);
 
   if (loading || !user) {
     return (
@@ -110,13 +122,19 @@ export default function AdminPage() {
       return;
     }
 
+    const finalCategory = category === "__ADD_NEW__" ? customCategory.trim() : category;
+    if (category === "__ADD_NEW__" && !finalCategory) {
+      alert("Please enter a new category name.");
+      return;
+    }
+
     setUploading(true);
     setMessage("Uploading photograph...");
 
     try {
       const result = await addPhoto(file, { 
         title, 
-        category, 
+        category: finalCategory, 
         alt,
         story,
         exif: exifData || undefined // Pass the extracted EXIF
@@ -127,6 +145,8 @@ export default function AdminPage() {
         setTitle("");
         setAlt("");
         setStory("");
+        setCategory("Landscape");
+        setCustomCategory("");
         // Redirect after a short delay so they see the success message
         setTimeout(() => {
           router.push("/");
@@ -140,6 +160,47 @@ export default function AdminPage() {
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleEditClick = (photo: PhotoData) => {
+    setEditingPhoto(photo);
+    // Determine if the photo's category is one of the known ones, otherwise default to Add New
+    const isKnown = uniqueCategories.includes(photo.category);
+    setEditForm({
+      title: photo.title,
+      category: isKnown ? photo.category : "__ADD_NEW__",
+      customCategory: isKnown ? "" : photo.category,
+      alt: photo.alt,
+      story: photo.story || ""
+    });
+  };
+
+  const submitEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPhoto || !editingPhoto.id) return;
+    
+    const finalCategory = editForm.category === "__ADD_NEW__" ? editForm.customCategory.trim() : editForm.category;
+    if (editForm.category === "__ADD_NEW__" && !finalCategory) {
+      alert("Please enter a new category name.");
+      return;
+    }
+
+    setEditSaving(true);
+    const success = await updatePhoto(editingPhoto.id, {
+      title: editForm.title,
+      category: finalCategory,
+      alt: editForm.alt,
+      story: editForm.story
+    });
+
+    if (success) {
+      setMessage("Photograph updated successfully.");
+      setEditingPhoto(null);
+      setTimeout(() => setMessage(""), 3000);
+    } else {
+      alert("Error: Failed to update photograph.");
+    }
+    setEditSaving(false);
   };
 
   const handleAIDraft = async () => {
@@ -226,13 +287,25 @@ export default function AdminPage() {
                   className="admin-select"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
+                  style={{ marginBottom: category === "__ADD_NEW__" ? "10px" : "0" }}
                 >
-                  {CATEGORIES.map((cat) => (
+                  {uniqueCategories.map((cat) => (
                     <option key={cat} value={cat}>
                       {cat}
                     </option>
                   ))}
+                  <option value="__ADD_NEW__">+ Add New Category...</option>
                 </select>
+                {category === "__ADD_NEW__" && (
+                  <input
+                    className="admin-input"
+                    type="text"
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="Enter Custom Category"
+                    required
+                  />
+                )}
               </div>
               <div>
                 <label className="admin-label">Select File</label>
@@ -328,12 +401,20 @@ export default function AdminPage() {
                       <h4>{photo.title}</h4>
                       <p style={{ fontSize: "10px", color: "var(--muted)", textTransform: "uppercase" }}>{photo.category}</p>
                     </div>
-                    <button 
-                      onClick={() => photo.id && handleDelete(photo.id, photo.src)}
-                      className="delete-btn"
-                    >
-                      Delete
-                    </button>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button 
+                        onClick={() => handleEditClick(photo)}
+                        className="edit-btn"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => photo.id && handleDelete(photo.id, photo.src)}
+                        className="delete-btn"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -341,6 +422,82 @@ export default function AdminPage() {
           )}
         </section>
       </div>
+
+      {/* Edit Modal Overlay */}
+      {editingPhoto && (
+        <div className="modal-overlay">
+          <div className="edit-modal reveal">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <h2 className="admin-title" style={{ fontSize: "20px", margin: 0 }}>Edit Photograph</h2>
+              <button onClick={() => setEditingPhoto(null)} className="close-btn">&times;</button>
+            </div>
+            <form onSubmit={submitEdit} className="admin-form">
+              <div>
+                <label className="admin-label">Title</label>
+                <input
+                  className="admin-input"
+                  type="text"
+                  value={editForm.title}
+                  onChange={(e) => setEditForm({...editForm, title: e.target.value})}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Category</label>
+                <select
+                  className="admin-select"
+                  value={editForm.category}
+                  onChange={(e) => setEditForm({...editForm, category: e.target.value})}
+                  style={{ marginBottom: editForm.category === "__ADD_NEW__" ? "10px" : "0" }}
+                >
+                  {uniqueCategories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                  <option value="__ADD_NEW__">+ Add New Category...</option>
+                </select>
+                {editForm.category === "__ADD_NEW__" && (
+                  <input
+                    className="admin-input"
+                    type="text"
+                    value={editForm.customCategory}
+                    onChange={(e) => setEditForm({...editForm, customCategory: e.target.value})}
+                    placeholder="Enter Custom Category"
+                    required
+                  />
+                )}
+              </div>
+
+              <div>
+                <label className="admin-label">Alt Text (Accessibility)</label>
+                <input
+                  className="admin-input"
+                  type="text"
+                  value={editForm.alt}
+                  onChange={(e) => setEditForm({...editForm, alt: e.target.value})}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="admin-label">Behind The Lens (Story)</label>
+                <textarea
+                  className="admin-input"
+                  style={{ minHeight: "150px", resize: "vertical" }}
+                  value={editForm.story}
+                  onChange={(e) => setEditForm({...editForm, story: e.target.value})}
+                />
+              </div>
+
+              <button type="submit" className="admin-button" disabled={editSaving} style={{ width: "100%" }}>
+                {editSaving ? "Saving..." : "Save Changes"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

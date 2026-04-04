@@ -7,7 +7,8 @@ import {
   serverTimestamp,
   onSnapshot,
   doc,
-  deleteDoc 
+  deleteDoc,
+  updateDoc
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./firebase";
@@ -122,6 +123,19 @@ export const deletePhoto = async (id: string, src: string): Promise<boolean> => 
     return true;
   } catch (error) {
     console.error("Error deleting photo:", error);
+    return false;
+  }
+};
+
+// Update an existing photo's metadata
+export const updatePhoto = async (id: string, updatedFields: Partial<Omit<PhotoData, "id" | "src" | "createdAt">>): Promise<boolean> => {
+  try {
+    const docRef = doc(db, COLLECTION_NAME, id);
+    const sanitizedFields = sanitize(updatedFields);
+    await updateDoc(docRef, sanitizedFields);
+    return true;
+  } catch (error) {
+    console.error("Error updating photo:", error);
     return false;
   }
 };
