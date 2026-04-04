@@ -187,7 +187,6 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ 
-                        duration: 0.6, 
                         delay: (index % 6) * 0.1,
                         ease: [0.215, 0.61, 0.355, 1] 
                       }}
@@ -300,9 +299,11 @@ export default function HomePage() {
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
             <div className="lightbox-image-container">
               <Image 
+                key={activePhoto.id}
                 src={activePhoto.src} 
                 alt={activePhoto.alt} 
                 fill
+                priority
                 style={{ objectFit: "contain" }}
               />
             </div>

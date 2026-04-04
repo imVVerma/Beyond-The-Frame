@@ -108,6 +108,14 @@ nav a:hover {
   text-transform: uppercase;
   color: var(--text);
   text-decoration: none;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .logo {
+    font-size: 16px;
+    letter-spacing: 3px;
+  }
 }
 
 .logo-icon {
@@ -300,8 +308,8 @@ nav a:hover {
 
 .hero-img {
   object-fit: cover;
-  filter: saturate(0.85) brightness(0.5);
-  opacity: 0.8;
+  filter: saturate(0.85) brightness(0.7);
+  opacity: 0.9;
   transform: translateY(var(--hero-shift, 0px)) scale(1.08);
   transition: filter 0.6s ease;
   will-change: transform;
@@ -406,7 +414,8 @@ nav a:hover {
 
 .section-subtitle {
   color: var(--muted);
-  max-width: 520px;
+  max-width: 100%; /* More flexible for mobile/desktop-zoomed views */
+  width: min(520px, 90%);
   font-size: 15px;
   line-height: 1.7;
 }
@@ -1147,7 +1156,7 @@ footer {
 }
 
 @media (max-width: 900px) {
-  nav ul {
+  .nav-links {
     display: none;
   }
 
@@ -1186,6 +1195,25 @@ footer {
 
   .contact-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .journal-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .journal-sidebar {
+    position: static;
+  }
+  
+  .sidebar-block {
+    margin-bottom: 30px;
+  }
+
+  .journal-title {
+    font-size: clamp(36px, 10vw, 56px);
   }
 }
 
