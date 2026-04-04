@@ -166,11 +166,10 @@ export default function HomePage() {
           ) : (
             <div className="gallery-grid">
               {filteredPhotos.map((photo, index) => {
-                const isLarge = index % 5 === 0;
                 return (
                   <div 
                     key={photo.id || index} 
-                    className={`gallery-item ${isLarge ? "col-6 row-2" : "col-6 row-1"} reveal`}
+                    className="gallery-item col-4 reveal"
                     style={{ animationDelay: `${(index % 10) * 0.1}s` }}
                     onClick={() => setActivePhoto(photo)}
                   >

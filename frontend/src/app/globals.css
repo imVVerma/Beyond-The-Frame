@@ -424,17 +424,18 @@ nav a:hover {
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 18px;
+  gap: 24px;
 }
 
 .gallery-item {
   position: relative;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 12px;
   background: var(--card);
   cursor: pointer;
   box-shadow: var(--shadow);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  aspect-ratio: 1 / 1;
 }
 
 .gallery-item img {
@@ -479,21 +480,16 @@ nav a:hover {
   color: var(--muted);
 }
 
-.col-6 {
-  grid-column: span 6;
-}
-
 .col-4 {
   grid-column: span 4;
 }
 
-.row-2 {
-  grid-row: span 2;
-  min-height: 380px;
+.col-6 {
+  grid-column: span 6;
 }
 
-.row-1 {
-  min-height: 220px;
+.col-12 {
+  grid-column: span 12;
 }
 
 .about {
@@ -1096,15 +1092,15 @@ footer {
   }
 
   .gallery-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-
-  .col-6 {
-    grid-column: span 6;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
   .col-4 {
     grid-column: span 6;
+  }
+
+  .col-6 {
+    grid-column: span 12;
   }
 
   .row-2 {
