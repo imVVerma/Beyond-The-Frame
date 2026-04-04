@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import exifr from "exifr";
 import { addPhoto, deletePhoto, updatePhoto, subscribeToPhotos, PhotoData } from "../../lib/photoService";
 import { useAuth } from "../../lib/authContext";
@@ -404,7 +405,14 @@ export default function AdminPage() {
             <div className="admin-grid">
               {photos.map((photo) => (
                 <div key={photo.id} className="admin-card">
-                  <img src={photo.src} alt={photo.alt} />
+                  <div className="admin-card-image-container">
+                    <Image 
+                      src={photo.src} 
+                      alt={photo.alt} 
+                      fill
+                      className="admin-card-img"
+                    />
+                  </div>
                   <div className="admin-card-content">
                     <div>
                       <h4>{photo.title}</h4>

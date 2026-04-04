@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm, ValidationError } from "@formspree/react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { subscribeToPhotos, PhotoData } from "../lib/photoService";
 import StoryJournal from "../components/StoryJournal";
@@ -122,7 +124,14 @@ export default function HomePage() {
         ref={heroRef}
       >
         <div className="hero-media">
-          <img src="/images/camera_hero.png" alt="Aesthetic Leica-style camera" />
+          <Image 
+            src="/images/camera_hero.png" 
+            alt="Aesthetic Leica-style camera" 
+            fill
+            priority
+            quality={90}
+            className="hero-img"
+          />
         </div>
         <div className="hero-content">
           <h1 className="reveal">Beyond the Frame</h1>
@@ -164,24 +173,45 @@ export default function HomePage() {
               Illuminating the archive...
             </div>
           ) : (
-            <div className="gallery-grid">
-              {filteredPhotos.map((photo, index) => {
-                return (
-                  <div 
-                    key={photo.id || index} 
-                    className="gallery-item col-4 reveal"
-                    style={{ animationDelay: `${(index % 10) * 0.1}s` }}
-                    onClick={() => setActivePhoto(photo)}
-                  >
-                    <img src={photo.src} alt={photo.alt} loading="lazy" />
-                    <div className="gallery-overlay">
-                      <h3>{photo.title}</h3>
-                      <p>{photo.category}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <motion.div 
+               layout
+               className="gallery-grid"
+            >
+              <AnimatePresence>
+                {filteredPhotos.map((photo, index) => {
+                  return (
+                    <motion.div 
+                      key={photo.id || index} 
+                      layout
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: (index % 6) * 0.1,
+                        ease: [0.215, 0.61, 0.355, 1] 
+                      }}
+                      className="gallery-item col-4"
+                      onClick={() => setActivePhoto(photo)}
+                    >
+                      <div className="gallery-image-container">
+                        <Image 
+                          src={photo.src} 
+                          alt={photo.alt} 
+                          fill
+                          sizes="(max-width: 600px) 50vw, (max-width: 900px) 50vw, 33vw"
+                          className="gallery-img"
+                        />
+                      </div>
+                      <div className="gallery-overlay">
+                        <h3>{photo.title}</h3>
+                        <p>{photo.category}</p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </motion.div>
           )}
         </div>
       </section>
@@ -191,7 +221,14 @@ export default function HomePage() {
       {/* About Section */}
       <section id="about" className="about">
         <div className="container about-wrap">
-          <img src="/images/VV.jpeg" alt="Vaibhav Verma portrait" className="reveal" />
+          <div className="about-image-wrap">
+            <Image 
+              src="/images/VV.jpeg" 
+              alt="Vaibhav Verma portrait" 
+              fill
+              className="about-img"
+            />
+          </div>
           <div className="reveal delay-1">
             <h2 className="section-title">About Me</h2>
             <p>
@@ -261,7 +298,14 @@ export default function HomePage() {
           <button className="lightbox-close" onClick={() => setActivePhoto(null)}>&times;</button>
           
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <img src={activePhoto.src} alt={activePhoto.alt} />
+            <div className="lightbox-image-container">
+              <Image 
+                src={activePhoto.src} 
+                alt={activePhoto.alt} 
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </div>
             <span className="lightbox-prev" onClick={(e) => { e.stopPropagation(); navigateLightbox(-1); }}>&#10094;</span>
             <span className="lightbox-next" onClick={(e) => { e.stopPropagation(); navigateLightbox(1); }}>&#10095;</span>
             <div className="lightbox-caption">

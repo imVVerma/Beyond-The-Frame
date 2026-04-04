@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { PhotoData } from "../lib/photoService";
 
 // Helper to format shutter speed as fraction (copied from page.tsx for consistency)
@@ -41,86 +42,98 @@ export default function StoryJournal({ photo }: StoryJournalProps) {
   return (
     <section id="behind-the-lens" className="journal-section">
       <div className="container">
-        <div className="journal-header">
-          <span className="journal-meta">{displayMeta}</span>
-          <h2 className="journal-title">{displayTitle}</h2>
-          {!photo && (
-            <p className="journal-intro">
-              An exploration of patience, light, and the moments that occur when we stop looking for the shot and start listening to the landscape.
-            </p>
-          )}
-        </div>
-
-        <div className="journal-content">
-          <div className="journal-main">
-            <div className="journal-image-wrap reveal">
-              <img 
-                src={displaySrc} 
-                alt={photo?.alt || "Featured story landscape"} 
-                className="journal-featured-img"
-                key={displaySrc} // Force re-animation on change
-              />
-              {photo && <div className="journal-caption">Technical Story &bull; {photo.category}</div>}
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={displayTitle}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            <div className="journal-header">
+              <span className="journal-meta">{displayMeta}</span>
+              <h2 className="journal-title">{displayTitle}</h2>
               {!photo && (
-                <div className="journal-caption">
-                  Captured at Blue Hour, 4,200m elevation.
-                </div>
+                <p className="journal-intro">
+                  An exploration of patience, light, and the moments that occur when we stop looking for the shot and start listening to the landscape.
+                </p>
               )}
             </div>
 
-            <div className="journal-text reveal delay-1">
-              {typeof displayStory === 'string' ? (
-                displayStory.split('\n\n').map((para, i) => (
-                  <p key={i}>{para}</p>
-                ))
-              ) : displayStory}
-            </div>
-          </div>
+            <div className="journal-content">
+              <div className="journal-main">
+                <div className="journal-image-wrap">
+                  <div className="journal-featured-image-container">
+                    <Image 
+                      src={displaySrc} 
+                      alt={photo?.alt || "Featured story landscape"} 
+                      fill
+                      className="journal-featured-img"
+                    />
+                  </div>
+                  {photo && <div className="journal-caption">Technical Story &bull; {photo.category}</div>}
+                  {!photo && (
+                    <div className="journal-caption">
+                      Captured at Blue Hour, 4,200m elevation.
+                    </div>
+                  )}
+                </div>
 
-          <aside className="journal-sidebar reveal delay-2">
-            <div className="sidebar-block">
-              <h4>The Intent</h4>
-              <p>
-                {photo ? `Capturing the essence of ${photo.title}. An exercise in perspective and light.` : "To capture the weight of the air, not just the height of the peaks. Stillness as a physical presence."}
-              </p>
-            </div>
-            
-            {photo?.exif && (
-              <>
-                <div className="sidebar-block">
-                  <h4>The Gear</h4>
-                  <p>{photo.exif.model || "Unknown Camera"}{photo.exif.lensModel ? ` with ${photo.exif.lensModel}` : ""}</p>
+                <div className="journal-text">
+                  {typeof displayStory === 'string' ? (
+                    displayStory.split('\n\n').map((para, i) => (
+                      <p key={i}>{para}</p>
+                    ))
+                  ) : displayStory}
                 </div>
-                <div className="sidebar-block">
-                  <h4>Settings</h4>
-                  <ul className="sidebar-stats">
-                    {photo.exif.iso && <li><span>ISO:</span> {photo.exif.iso}</li>}
-                    {photo.exif.fNumber && <li><span>Aperture:</span> f/{photo.exif.fNumber}</li>}
-                    {photo.exif.exposureTime && <li><span>Shutter:</span> {formatExposure(photo.exif.exposureTime)}</li>}
-                    {photo.exif.focalLength && <li><span>Focal:</span> {Math.round(photo.exif.focalLength)}mm</li>}
-                  </ul>
-                </div>
-              </>
-            )}
+              </div>
 
-            {!photo && (
-              <>
+              <aside className="journal-sidebar">
                 <div className="sidebar-block">
-                  <h4>The Gear</h4>
-                  <p>Leica M11, 35mm Summilux. Tripod-mounted. Long exposure to smooth the moving mist.</p>
+                  <h4>The Intent</h4>
+                  <p>
+                    {photo ? `Capturing the essence of ${photo.title}. An exercise in perspective and light.` : "To capture the weight of the air, not just the height of the peaks. Stillness as a physical presence."}
+                  </p>
                 </div>
-                <div className="sidebar-block">
-                  <h4>Settings</h4>
-                  <ul className="sidebar-stats">
-                    <li><span>ISO:</span> 64</li>
-                    <li><span>Aperture:</span> f/8.0</li>
-                    <li><span>Shutter:</span> 30.0s</li>
-                  </ul>
-                </div>
-              </>
-            )}
-          </aside>
-        </div>
+                
+                {photo?.exif && (
+                  <>
+                    <div className="sidebar-block">
+                      <h4>The Gear</h4>
+                      <p>{photo.exif.model || "Unknown Camera"}{photo.exif.lensModel ? ` with ${photo.exif.lensModel}` : ""}</p>
+                    </div>
+                    <div className="sidebar-block">
+                      <h4>Settings</h4>
+                      <ul className="sidebar-stats">
+                        {photo.exif.iso && <li><span>ISO:</span> {photo.exif.iso}</li>}
+                        {photo.exif.fNumber && <li><span>Aperture:</span> f/{photo.exif.fNumber}</li>}
+                        {photo.exif.exposureTime && <li><span>Shutter:</span> {formatExposure(photo.exif.exposureTime)}</li>}
+                        {photo.exif.focalLength && <li><span>Focal:</span> {Math.round(photo.exif.focalLength)}mm</li>}
+                      </ul>
+                    </div>
+                  </>
+                )}
+
+                {!photo && (
+                  <>
+                    <div className="sidebar-block">
+                      <h4>The Gear</h4>
+                      <p>Leica M11, 35mm Summilux. Tripod-mounted. Long exposure to smooth the moving mist.</p>
+                    </div>
+                    <div className="sidebar-block">
+                      <h4>Settings</h4>
+                      <ul className="sidebar-stats">
+                        <li><span>ISO:</span> 64</li>
+                        <li><span>Aperture:</span> f/8.0</li>
+                        <li><span>Shutter:</span> 30.0s</li>
+                      </ul>
+                    </div>
+                  </>
+                )}
+              </aside>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

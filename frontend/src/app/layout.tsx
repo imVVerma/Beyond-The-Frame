@@ -21,8 +21,33 @@ const bodoni = Bodoni_Moda({
 });
 
 export const metadata: Metadata = {
-  title: "Vaibhav Verma Photography",
-  description: "Beyond the Frame - A Quiet Archive of Light and Weather",
+  title: "Vaibhav Verma Photography | Beyond the Frame",
+  description: "A Quiet Archive of Light, Weather, and Narrative Storytelling.",
+  openGraph: {
+    title: "Vaibhav Verma | Beyond the Frame",
+    description: "A professional photography archive exploring the intersection of light and narrative.",
+    url: "https://beyond-the-frame-sigma.vercel.app",
+    siteName: "Vaibhav Verma Photography",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Beyond the Frame Photography Archive",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vaibhav Verma Photography",
+    description: "A Quiet Archive of Light and Weather.",
+    images: ["/og-image.jpg"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 import { AuthContextProvider } from "../lib/authContext";
