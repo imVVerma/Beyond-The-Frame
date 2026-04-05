@@ -2,7 +2,7 @@
 
 **Beyond The Frame** is a premium, production-grade digital gallery and photography portfolio. It is designed to be more than just a grid of images—it is an immersive storytelling platform that blends high-performance media delivery with artificial intelligence.
 
-<img src="https://beyond-the-frame-sigma.vercel.app/og-image.png" alt="Archive Landing" width="600" />
+<img src="https://beyond-the-frame-sigma.vercel.app/og-image.png" alt="Archive Landing" width="800" />
 
 ## 🎨 Design Philosophy
 - **Editorial Aesthetic**: A high-contrast, "Digital Journal" feel using Bodoni Moda and Manrope typography.
