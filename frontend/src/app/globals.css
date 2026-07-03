@@ -263,16 +263,97 @@ nav a:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 0;
+  /* Smooth transition when story panel opens */
+  transition: max-width 0.38s ease;
+}
+
+/* Two-column layout when story is open on desktop */
+.lightbox-content.story-open {
+  flex-direction: row;
+  align-items: stretch;
+  max-width: min(1440px, 98vw);
 }
 
 .lightbox-image-container {
   position: relative;
   width: 100%;
-  flex: 1; /* Take all available space minus the caption */
+  flex: 1;
   min-height: 50vh;
-  max-height: 75vh;
+  max-height: 72vh;
+  transition: max-height 0.38s ease;
 }
+
+/* Slightly shorter when story panel is open beside it */
+.story-open .lightbox-image-container {
+  max-height: 60vh;
+}
+
+/* Left column wrapper */
+.lightbox-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  flex-shrink: 0;
+  transition: width 0.38s ease;
+}
+
+.story-open .lightbox-main {
+  width: 50%;
+}
+
+/* Story panel — right column */
+.lightbox-story-panel {
+  width: min(50%, 560px);
+  flex-shrink: 0;
+  overflow-y: auto;
+  max-height: 94vh;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(5, 5, 7, 0.72);
+  backdrop-filter: blur(12px);
+}
+
+.story-panel-inner {
+  padding: 52px 36px 48px;
+}
+
+.story-panel-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+.story-panel-title {
+  font-family: var(--font-bodoni), serif;
+  font-size: clamp(20px, 2.2vw, 30px);
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 32px;
+  line-height: 1.2;
+}
+
+.story-panel-text {
+  font-family: var(--font-cormorant), serif;
+  font-size: 19px;
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.story-panel-text p {
+  margin-bottom: 26px;
+}
+
+.story-panel-text p:last-child {
+  margin-bottom: 0;
+}
+
 
 .lightbox-caption {
   text-align: center;
@@ -678,12 +759,43 @@ footer {
   letter-spacing: 2px;
 }
 
-/* Navigation controls override */
-.lightbox-close,
+/* Navigation controls — positioned on the overlay (.lightbox) itself */
 .lightbox-prev,
 .lightbox-next {
   position: absolute;
-  top: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 26px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, background 0.3s ease;
+  z-index: 2050;
+}
+
+.lightbox-prev {
+  left: 24px;
+}
+
+.lightbox-next {
+  right: 24px;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+  transform: translateY(-50%) scale(1.05);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* Close button — fixed so it always sits above all content on any device */
+.lightbox-close {
+  position: fixed;
+  top: max(env(safe-area-inset-top, 0px), 20px);
+  right: max(env(safe-area-inset-right, 0px), 20px);
+  z-index: 2100;
   font-size: 26px;
   color: var(--text);
   cursor: pointer;
@@ -694,32 +806,11 @@ footer {
   transition: transform 0.3s ease, background 0.3s ease;
 }
 
-.lightbox-close {
-  right: 24px;
-}
-
-.lightbox-prev {
-  left: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.lightbox-next {
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.lightbox-close:hover,
-.lightbox-prev:hover,
-.lightbox-next:hover {
-  transform: translateY(-50%) scale(1.05);
+.lightbox-close:hover {
+  transform: scale(1.05);
   background: rgba(255, 255, 255, 0.16);
 }
 
-.lightbox-close:hover {
-  transform: scale(1.05);
-}
 
 .reveal {
   opacity: 0;
@@ -1233,5 +1324,84 @@ footer {
 
   .admin-form {
     padding: 26px;
+  }
+}
+
+/* ─── Mobile lightbox overrides ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Let the overlay scroll so story content isn't clipped */
+  .lightbox {
+    padding: 0;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  /* Single-column in both default and story-open states */
+  .lightbox-content,
+  .lightbox-content.story-open {
+    flex-direction: column;
+    align-items: center;
+    max-width: 100vw;
+    max-height: none;
+    min-height: 100svh;
+    padding-top: 64px; /* breathing room under fixed close button */
+    gap: 0;
+  }
+
+  /* Image takes a sensible chunk of screen height */
+  .lightbox-image-container,
+  .story-open .lightbox-image-container {
+    min-height: 44vw;
+    max-height: 56vw;
+  }
+
+  /* Caption stays centred below the image */
+  .lightbox-caption {
+    padding-bottom: 24px;
+  }
+
+  /* Main panel fills full width on mobile too */
+  .lightbox-main,
+  .story-open .lightbox-main {
+    width: 100%;
+  }
+
+  /* Story panel: full-width column below the image */
+  .lightbox-story-panel {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    overflow-y: visible; /* parent scrolls */
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Tighter inner padding on small screens */
+  .story-panel-inner {
+    padding: 32px 22px 80px; /* bottom pad avoids nav arrows */
+  }
+
+  /* Nav arrows — fixed at bottom corners so they never obscure story text */
+  .lightbox-prev,
+  .lightbox-next {
+    position: fixed;
+    top: auto;
+    bottom: 24px;
+    transform: none;
+    font-size: 20px;
+    padding: 8px 12px;
+  }
+
+  .lightbox-prev {
+    left: 20px;
+  }
+
+  .lightbox-next {
+    right: 20px;
+  }
+
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    transform: scale(1.05);
   }
 }

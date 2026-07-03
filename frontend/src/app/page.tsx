@@ -6,7 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import { subscribeToPhotos, PhotoData } from "../lib/photoService";
-import StoryJournal from "../components/StoryJournal";
+
 
 const CATEGORIES = ["All", "Landscape", "Architecture", "Portrait", "Silhouette", "Automotive", "Product"];
 
@@ -24,7 +24,7 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [activePhoto, setActivePhoto] = useState<PhotoData | null>(null);
-  const [storyPhoto, setStoryPhoto] = useState<PhotoData | null>(null);
+  const [storyOpen, setStoryOpen] = useState(false);
   const [state, handleSubmit] = useForm("xeeplydy");
 
   // Subscribe to real-time changes
@@ -73,6 +73,11 @@ export default function HomePage() {
     };
   }, [activePhoto]);
 
+  // Reset story panel whenever the viewer navigates to a different photo
+  useEffect(() => {
+    setStoryOpen(false);
+  }, [activePhoto]);
+
   useEffect(() => {
     if (!heroRef.current) return;
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -102,16 +107,7 @@ export default function HomePage() {
     };
   }, []);
 
-  const handleReadStory = (photo: PhotoData) => {
-    setStoryPhoto(photo);
-    setActivePhoto(null);
-    setTimeout(() => {
-      const journalSection = document.getElementById("behind-the-lens");
-      if (journalSection) {
-        journalSection.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 100);
-  };
+
 
   return (
     <main>
@@ -215,7 +211,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <StoryJournal photo={storyPhoto} />
+
 
       {/* About Section */}
       <section id="about" className="about">
@@ -293,43 +289,88 @@ export default function HomePage() {
 
       {/* Lightbox */}
       {activePhoto && (
-        <div className="lightbox active" onClick={() => setActivePhoto(null)}>
-          <button className="lightbox-close" onClick={() => setActivePhoto(null)}>&times;</button>
-          
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <div className="lightbox-image-container">
-              <Image 
-                key={activePhoto.id}
-                src={activePhoto.src} 
-                alt={activePhoto.alt} 
-                fill
-                priority
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-            <span className="lightbox-prev" onClick={(e) => { e.stopPropagation(); navigateLightbox(-1); }}>&#10094;</span>
-            <span className="lightbox-next" onClick={(e) => { e.stopPropagation(); navigateLightbox(1); }}>&#10095;</span>
-            <div className="lightbox-caption">
-              <h3>{activePhoto.title}</h3>
-              <p>{activePhoto.category}</p>
-              
-              {activePhoto.exif && (
-                <div className="lightbox-exif">
-                  {activePhoto.exif.model && <span>{activePhoto.exif.model}</span>}
-                  {activePhoto.exif.fNumber && <span>f/{activePhoto.exif.fNumber}</span>}
-                  {activePhoto.exif.exposureTime && <span>{formatExposure(activePhoto.exif.exposureTime)}</span>}
-                  {activePhoto.exif.iso && <span>ISO {activePhoto.exif.iso}</span>}
-                </div>
-              )}
+        <div
+          className="lightbox active"
+          onClick={() => { setActivePhoto(null); setStoryOpen(false); }}
+        >
+          {/* Close button — fixed so it's never clipped by the image on any viewport */}
+          <button
+            className="lightbox-close"
+            onClick={(e) => { e.stopPropagation(); setActivePhoto(null); setStoryOpen(false); }}
+          >
+            &times;
+          </button>
 
-              <button 
-                className="lightbox-story-btn"
-                onClick={() => handleReadStory(activePhoto)}
-              >
-                Read The Story
-              </button>
+          <div
+            className={`lightbox-content${storyOpen ? " story-open" : ""}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Main panel: image + caption */}
+            <div className="lightbox-main">
+              <div className="lightbox-image-container">
+                <Image
+                  key={activePhoto.id}
+                  src={activePhoto.src}
+                  alt={activePhoto.alt}
+                  fill
+                  priority
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+
+              <div className="lightbox-caption">
+                <h3>{activePhoto.title}</h3>
+                <p>{activePhoto.category}</p>
+
+                {activePhoto.exif && (
+                  <div className="lightbox-exif">
+                    {activePhoto.exif.model && <span>{activePhoto.exif.model}</span>}
+                    {activePhoto.exif.fNumber && <span>f/{activePhoto.exif.fNumber}</span>}
+                    {activePhoto.exif.exposureTime && <span>{formatExposure(activePhoto.exif.exposureTime)}</span>}
+                    {activePhoto.exif.iso && <span>ISO {activePhoto.exif.iso}</span>}
+                  </div>
+                )}
+
+                {/* Only show if a story actually exists */}
+                {activePhoto.story && (
+                  <button
+                    className="lightbox-story-btn"
+                    onClick={() => setStoryOpen((prev) => !prev)}
+                  >
+                    {storyOpen ? "Close Story" : "Read The Story"}
+                  </button>
+                )}
+              </div>
             </div>
+
+            {/* Story panel — slides in beside the image (desktop) / below it (mobile) */}
+            <AnimatePresence>
+              {storyOpen && activePhoto.story && (
+                <motion.div
+                  className="lightbox-story-panel"
+                  key="story-panel"
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 40 }}
+                  transition={{ duration: 0.38, ease: [0.215, 0.61, 0.355, 1] }}
+                >
+                  <div className="story-panel-inner">
+                    <span className="story-panel-label">Behind The Frame</span>
+                    <h4 className="story-panel-title">{activePhoto.title}</h4>
+                    <div className="story-panel-text">
+                      {activePhoto.story.split("\n\n").map((para, i) => (
+                        <p key={i}>{para}</p>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
+
+          {/* Prev / next — children of the overlay so they span the full viewport */}
+          <span className="lightbox-prev" onClick={(e) => { e.stopPropagation(); navigateLightbox(-1); }}>&#10094;</span>
+          <span className="lightbox-next" onClick={(e) => { e.stopPropagation(); navigateLightbox(1); }}>&#10095;</span>
         </div>
       )}
 
